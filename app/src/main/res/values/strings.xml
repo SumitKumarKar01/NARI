@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NARI</string>
+    <string name="userID">User ID</string>
+    <string name="pass">Password</string>
+    <string name="login">LOGIN</string>
+    <string name="pin">PIN</string>
+
+</resources>
