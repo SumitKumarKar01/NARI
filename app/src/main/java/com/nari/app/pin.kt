@@ -38,7 +38,7 @@ class pin : AppCompatActivity() {
     }
 
     private fun openAnotherPage() {
-        val intent = Intent(this, Login::class.java)
+        val intent = Intent(this, info::class.java)
         startActivity(intent)
     }
 }

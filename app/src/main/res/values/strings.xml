@@ -4,5 +4,9 @@
     <string name="pass">Password</string>
     <string name="login">LOGIN</string>
     <string name="pin">PIN</string>
+    <string name="calendar">Calendar</string>
+    <string name="information">Knowledge Hub</string>
+    <string name="pregnancy">Pregnancy</string>
+    <string name="maps">Maps</string>
 
 </resources>

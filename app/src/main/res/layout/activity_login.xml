@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,7 +18,7 @@
         android:layout_marginBottom="16sp"
         android:padding="10sp"
         android:fontFamily="@font/righteousregular"
-        android:textColor="@color/md_theme_light_primary"/>
+        android:textColor="?android:colorPrimary"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/UID"
