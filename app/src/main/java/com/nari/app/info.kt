@@ -28,7 +28,9 @@ class info : AppCompatActivity() {
         bottomNavigationView.selectedItemId  = R.id.page_3
         bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId){
-                R.id.page_3  -> {
+                R.id.page_1  -> {
+                    startActivity(Intent(this,MainActivity::class.java))
+                    finish()
                     true
                 }
                 R.id.page_2 ->{

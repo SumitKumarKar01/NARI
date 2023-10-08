@@ -2,7 +2,9 @@
     <string name="app_name">NARI</string>
     <string name="userID">User ID</string>
     <string name="pass">Password</string>
+    <string name="confirmPass">Confirm Password</string>
     <string name="login">LOGIN</string>
+    <string name="reg">Register</string>
     <string name="pin">PIN</string>
     <string name="calendar">Calendar</string>
     <string name="information">Knowledge Hub</string>
