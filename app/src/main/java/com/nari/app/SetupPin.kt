@@ -56,7 +56,8 @@ class SetupPin : AppCompatActivity() {
     private fun handleSkipTextClick() {
         // Set the boolean key to false
         savePinSetStatus(false)
-        moveToNextPage()
+        startActivity(Intent(this,MainActivity::class.java))
+        finish()
     }
     private fun savePinToSharedPreferences(pin: String) {
         with(sharedPreferences.edit()) {
