@@ -3,24 +3,32 @@ package com.nari.app
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
 
-class info : AppCompatActivity() {
+class listInfo : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_info)
+        setContentView(R.layout.activity_list_info)
 
-        val card1 = findViewById<MaterialCardView>(R.id.card1)
-        card1.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
-        val card2 = findViewById<MaterialCardView>(R.id.card2)
-        card2.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
-        val card3 = findViewById<MaterialCardView>(R.id.card3)
-        card3.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
-        val card4 = findViewById<MaterialCardView>(R.id.card4)
-        card4.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
-        val card5 = findViewById<MaterialCardView>(R.id.card5)
-        card5.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
+
+
+        val commonClickListener = View.OnClickListener {
+           startActivity(Intent(this,infoPage::class.java))
+        }
+
+        val parentLayout = findViewById<ViewGroup>(R.id.pcards) // Replace with the ID of the layout containing your cards
+
+        for (i in 0 until parentLayout.childCount) {
+            val childView = parentLayout.getChildAt(i)
+            if (childView is MaterialCardView) {
+                childView.setOnClickListener(commonClickListener)
+            }
+        }
+
+
 
         //Bottom Navigation
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.info)
@@ -41,4 +49,7 @@ class info : AppCompatActivity() {
             }
         }
     }
+
+
+
 }

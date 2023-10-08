@@ -13,6 +13,12 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".infoPage"
+            android:exported="false" />
+        <activity
+            android:name=".listInfo"
+            android:exported="false" />
+        <activity
             android:name=".info"
             android:exported="false" />
         <activity
