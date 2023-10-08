@@ -1,6 +1,8 @@
 package com.nari.app
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -11,6 +13,11 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+
+    // Shared Preferences
+    private val sharedPreferences: SharedPreferences by lazy {
+        getSharedPreferences("Pin", Context.MODE_PRIVATE)
+    }
 
     private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
         val user = firebaseAuth.currentUser
@@ -23,8 +30,26 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+
+
         auth = FirebaseAuth.getInstance()
+        val pinStatus = intent.getBooleanExtra("passed",false)
+
+        if(pinStatus){
+            setContentView(R.layout.activity_main)
+        }
+        else{
+            if (isPinSet()){
+                startActivity(Intent(this,pin::class.java))
+                finish()
+            }
+            else{
+                setContentView(R.layout.activity_main)
+            }
+        }
+
+
 
 
 
@@ -61,6 +86,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
+
     override fun onStart() {
         super.onStart()
         // Add the AuthStateListener in onStart
@@ -72,4 +100,11 @@ class MainActivity : AppCompatActivity() {
         // Remove the AuthStateListener in onStop
         auth.removeAuthStateListener(authStateListener)
     }
+
+    private fun isPinSet(): Boolean {
+        // Check if PIN is already set
+        return sharedPreferences.getBoolean("isPinSet", false)
+    }
+
+
 }

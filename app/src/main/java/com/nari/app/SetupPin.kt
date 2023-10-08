@@ -13,7 +13,7 @@ class SetupPin : AppCompatActivity() {
 
     // Shared Preferences
     private val sharedPreferences: SharedPreferences by lazy {
-        getSharedPreferences("YourPrefsName", Context.MODE_PRIVATE)
+        getSharedPreferences("Pin", Context.MODE_PRIVATE)
     }
 
     // UI elements
@@ -46,7 +46,7 @@ class SetupPin : AppCompatActivity() {
             // Save the PIN and set the boolean key
             savePinSetStatus(true)
             savePinToSharedPreferences(pin)
-            moveToLoginPage()
+            moveToNextPage()
         } else {
             // Handle PIN mismatch
             // You may want to show an error message to the user
@@ -56,7 +56,7 @@ class SetupPin : AppCompatActivity() {
     private fun handleSkipTextClick() {
         // Set the boolean key to false
         savePinSetStatus(false)
-        moveToLoginPage()
+        moveToNextPage()
     }
     private fun savePinToSharedPreferences(pin: String) {
         with(sharedPreferences.edit()) {
@@ -72,8 +72,8 @@ class SetupPin : AppCompatActivity() {
         }
     }
 
-    private fun moveToLoginPage() {
-        startActivity(Intent(this,Login::class.java))
+    private fun moveToNextPage() {
+        startActivity(Intent(this,pin::class.java))
         finish()
     }
 

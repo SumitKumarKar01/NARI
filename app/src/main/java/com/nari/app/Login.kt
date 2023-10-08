@@ -1,6 +1,8 @@
 package com.nari.app
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -17,6 +19,12 @@ class Login : AppCompatActivity() {
 
     //Firebase Initialization
     private lateinit var auth: FirebaseAuth
+    // Shared Preferences
+    private val sharedPreferences: SharedPreferences by lazy {
+        getSharedPreferences("NewInstall", Context.MODE_PRIVATE)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -74,9 +82,7 @@ class Login : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI or navigate to the next activity
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    moveToNext()
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(
@@ -86,6 +92,32 @@ class Login : AppCompatActivity() {
                 }
             }
     }
+
+    private fun moveToNext() {
+        val isNew = sharedPreferences.getBoolean("isNew",true)
+        if (isNew){
+            saveNewStatus(!isNew)
+            startActivity(Intent(this,SetupPin::class.java))
+            finish()
+        }
+        else{
+            startActivity(Intent(this,MainActivity::class.java))
+            finish()
+        }
+
+    }
+
+    private fun saveNewStatus(isNew: Boolean) {
+        with(sharedPreferences.edit()) {
+            putBoolean("isNew", isNew)
+            apply()
+        }
+    }
+
+
+
+
+
 
 
 
