@@ -1,10 +1,12 @@
 package com.nari.app
 
+import JsonDatabaseSync
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -84,6 +86,19 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+
+        // Create an instance of DataUpdater and call updateDataFromJson
+        val dataUpdater = JsonDatabaseSync(this)
+        dataUpdater.updateDataFromJson()
+
+        // Retrieve and log data from the database
+        val itemRepository = ItemRepository(this)
+        val itemList = itemRepository.getAllItems()
+
+        // Log the items to the console
+        for (item in itemList) {
+            Log.d("DatabaseLog", "ID: ${item.id}, Title: ${item.title}, Description: ${item.description}, Image: ${item.image}, Category: ${item.category}")
         }
     }
 
