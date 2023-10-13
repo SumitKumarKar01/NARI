@@ -3,6 +3,8 @@ package com.nari.app
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.util.Log
+
 //import android.database.sqlite.SQLiteDatabase
 
 class ItemRepository(context: Context) {
@@ -22,9 +24,8 @@ class ItemRepository(context: Context) {
     }
 
     fun deleteAllItems() {
-        val db = dbHelper.writableDatabase
-        db.delete(DbHelper.TABLE_NAME, null, null)
-        db.close()
+        dbHelper.wipeDatabase()
+
     }
 
     fun getAllItems(): List<Item> {
@@ -33,7 +34,7 @@ class ItemRepository(context: Context) {
         val cursor: Cursor = db.rawQuery("SELECT * FROM ${DbHelper.TABLE_NAME}", null)
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_ID))
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_ID))
             val title = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_TITLE))
             val description = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_DESCRIPTION))
             val image = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_IMAGE))
@@ -47,5 +48,31 @@ class ItemRepository(context: Context) {
         db.close()
 
         return itemList
+    }
+    fun getItemById(itemId: Int): Item? {
+
+        val db = dbHelper.readableDatabase
+        val cursor = db.query(
+            DbHelper.TABLE_NAME,
+            null,
+            "${DbHelper.COLUMN_ID} = ?",
+            arrayOf(itemId.toString()),
+            null,
+            null,
+            null
+        )
+
+
+        return if (cursor.moveToFirst()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_ID))
+            val title = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_TITLE))
+            val description = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_DESCRIPTION))
+            val image = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_IMAGE))
+            val category = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_CATEGORY))
+
+            Item(id, title, description, image, category)
+        } else {
+            null
+        }
     }
 }

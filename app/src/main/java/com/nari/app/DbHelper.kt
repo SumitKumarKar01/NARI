@@ -4,6 +4,7 @@ package com.nari.app
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -23,7 +24,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     // SQL statement to create the table
     private val CREATE_TABLE = """
         CREATE TABLE $TABLE_NAME (
-            $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            $COLUMN_ID INTEGER PRIMARY KEY,
             $COLUMN_TITLE TEXT,
             $COLUMN_DESCRIPTION TEXT,
             $COLUMN_IMAGE TEXT,
@@ -39,5 +40,11 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         // Handle database upgrades here
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
+    }
+    fun wipeDatabase() {
+        val db = writableDatabase
+        db.execSQL("DELETE FROM $TABLE_NAME")
+//        Log.d("DatabaseLogger", "cleared")
+        db.close()
     }
 }

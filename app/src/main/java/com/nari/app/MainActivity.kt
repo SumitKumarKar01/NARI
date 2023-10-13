@@ -1,6 +1,6 @@
 package com.nari.app
 
-import JsonDatabaseSync
+import com.nari.app.JsonDatabaseSync
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences

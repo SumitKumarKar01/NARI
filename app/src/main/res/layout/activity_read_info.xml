@@ -29,7 +29,8 @@
         android:padding="16dp"
         android:text="Your Heading"
         android:textSize="24sp"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorPrimary"
+        android:background="?android:colorBackground"
         android:textStyle="bold"/>
 
     <!-- Scrollable Paragraph -->
@@ -52,12 +53,14 @@
 
             </ImageView>
             <TextView
+                android:id="@+id/DescriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:textSize="22sp"
+                android:background="?android:colorBackground"
                 android:text="WHO works with Member States and partners to address PCOS as part of its efforts to improve women’s health and reproductive well-being globally. WHO works with governmental and non-governmental partners to enhance public awareness related to PCOS, and to generate guidance to healthcare providers on how it can be identified and treated. In addition, WHO promotes research related to the most effective ways of preventing, diagnosing and treating infertility due to PCOS, and identifies the most important unanswered questions related to it."
-                android:textColor="@android:color/black"/>
+                android:textColor="?attr/colorOnBackground"/>
 
         </LinearLayout>
 

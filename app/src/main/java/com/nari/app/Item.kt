@@ -1,7 +1,7 @@
 package com.nari.app
 
 data class Item(
-    val id: Long?,
+    val id: Int,
     val title: String,
     val description: String,
     val image: String,

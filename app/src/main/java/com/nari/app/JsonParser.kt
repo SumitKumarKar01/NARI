@@ -1,6 +1,7 @@
 package com.nari.app
 
 import android.content.Context
+import android.util.Log
 import org.json.JSONArray
 
 class JsonParser(private val context: Context) {
@@ -10,7 +11,10 @@ class JsonParser(private val context: Context) {
         val itemRepository = ItemRepository(context)
         itemRepository.deleteAllItems()
 
+
+
         val jsonArray = JSONArray(jsonString)
+
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
 
@@ -19,7 +23,8 @@ class JsonParser(private val context: Context) {
             val image = jsonObject.getString("image")
             val category = jsonObject.getString("category")
 
-            val newItem = Item(null, title, description, image, category)
+            val newItem = Item(i, title, description, image, category)
+
             itemRepository.insertItem(newItem)
         }
     }
