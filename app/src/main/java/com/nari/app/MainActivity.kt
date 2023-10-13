@@ -74,11 +74,12 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId){
                 R.id.page_1  -> {
+                    startActivity(Intent(this,MainActivity::class.java))
+                    finish()
                     true
                 }
                 R.id.page_2 ->{
-                    startActivity(Intent(this,ReadInfoActivity::class.java))
-                    finish()
+
                     true
                 }
                 R.id.page_3 ->{

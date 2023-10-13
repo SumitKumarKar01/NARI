@@ -3,6 +3,36 @@
     "title": "Sample Item 1",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
     "image": "image_url_1",
+    "category": "Period"
+  },
+  {
+    "title": "Sample Item 1",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "image": "image_url_1",
+    "category": "Category A"
+  },
+  {
+    "title": "Sample Item 43",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "image": "image_url_1",
+    "category": "Period"
+  },
+  {
+    "title": "Sample Item 1",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "image": "image_url_1",
+    "category": "Category A"
+  },
+  {
+    "title": "Sample Item 1",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "image": "image_url_1",
+    "category": "Category A"
+  },
+  {
+    "title": "Sample Item 1",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+    "image": "image_url_1",
     "category": "Category A"
   },
   {

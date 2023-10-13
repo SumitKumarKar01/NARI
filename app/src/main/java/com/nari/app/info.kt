@@ -12,15 +12,40 @@ class info : AppCompatActivity() {
         setContentView(R.layout.activity_info)
 
         val card1 = findViewById<MaterialCardView>(R.id.card1)
-        card1.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
         val card2 = findViewById<MaterialCardView>(R.id.card2)
-        card2.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
         val card3 = findViewById<MaterialCardView>(R.id.card3)
-        card3.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
         val card4 = findViewById<MaterialCardView>(R.id.card4)
-        card4.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
         val card5 = findViewById<MaterialCardView>(R.id.card5)
-        card5.setOnClickListener { startActivity(Intent(this, listInfo::class.java)) }
+
+        card1.setOnClickListener {
+            val intent = Intent(this, listInfo::class.java)
+            intent.putExtra("category", "Period")
+            startActivity(intent)
+        }
+
+        card2.setOnClickListener {
+            val intent = Intent(this, listInfo::class.java)
+            intent.putExtra("category", "Pregnancy")
+            startActivity(intent)
+        }
+
+        card3.setOnClickListener {
+            val intent = Intent(this, listInfo::class.java)
+            intent.putExtra("category", "Sex Health")
+            startActivity(intent)
+        }
+
+        card4.setOnClickListener {
+            val intent = Intent(this, listInfo::class.java)
+            intent.putExtra("category", "Contraceptive")
+            startActivity(intent)
+        }
+
+        card5.setOnClickListener {
+            val intent = Intent(this, listInfo::class.java)
+            intent.putExtra("category", "Period Pain")
+            startActivity(intent)
+        }
 
         //Bottom Navigation
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.info)
@@ -37,6 +62,8 @@ class info : AppCompatActivity() {
                     true
                 }
                 R.id.page_3 ->{
+                    startActivity(Intent(this,info::class.java))
+                    finish()
                     true
                 }
                 else -> false

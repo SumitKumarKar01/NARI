@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 class ReadInfoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_read_info)
 
 
         // Set up the Material Toolbar
@@ -24,7 +25,9 @@ class ReadInfoActivity : AppCompatActivity() {
         val dataUpdater = JsonDatabaseSync(this)
         dataUpdater.updateDataFromJson()
 
-        val itemId = 1 // Replace with the actual ID you're looking for
+
+
+        val itemId = intent.getIntExtra("card_id",1) // Replace with the actual ID you're looking for
 
         val itemRepository = ItemRepository(this)
         val specificItem = itemRepository.getItemById(itemId)
@@ -35,10 +38,15 @@ class ReadInfoActivity : AppCompatActivity() {
             title.text = specificItem.title
             val description = findViewById<TextView>(R.id.DescriptionTextView)
             description.text = specificItem.description
-            setContentView(R.layout.activity_read_info)
+
         } else {
             Log.d("DatabaseLogger", "Item with ID $itemId not found")
         }
 
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        finish()
+        return true
     }
 }

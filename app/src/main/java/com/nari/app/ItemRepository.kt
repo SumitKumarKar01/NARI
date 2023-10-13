@@ -50,7 +50,6 @@ class ItemRepository(context: Context) {
         return itemList
     }
     fun getItemById(itemId: Int): Item? {
-
         val db = dbHelper.readableDatabase
         val cursor = db.query(
             DbHelper.TABLE_NAME,
@@ -62,17 +61,58 @@ class ItemRepository(context: Context) {
             null
         )
 
+        return try {
+            if (cursor.moveToFirst()) {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_ID))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_TITLE))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_DESCRIPTION))
+                val image = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_IMAGE))
+                val category = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_CATEGORY))
 
-        return if (cursor.moveToFirst()) {
+                Item(id, title, description, image, category)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            // Handle exceptions (e.g., log, throw, or return a default value)
+            null
+        } finally {
+            cursor?.close()
+            db?.close()
+        }
+    }
+
+
+    fun getItemsByCategory(category: String): List<Item> {
+        val itemList = mutableListOf<Item>()
+        val db = dbHelper.readableDatabase
+        val selection = "${DbHelper.COLUMN_CATEGORY} = ?"
+        val selectionArgs = arrayOf(category)
+
+        val cursor: Cursor = db.query(
+            DbHelper.TABLE_NAME,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+
+        while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_ID))
             val title = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_TITLE))
             val description = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_DESCRIPTION))
             val image = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_IMAGE))
-            val category = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_CATEGORY))
+            val itemCategory = cursor.getString(cursor.getColumnIndexOrThrow(DbHelper.COLUMN_CATEGORY))
 
-            Item(id, title, description, image, category)
-        } else {
-            null
+            val item = Item(id, title, description, image, itemCategory)
+            itemList.add(item)
         }
+
+        cursor.close()
+        db.close()
+
+        return itemList
     }
 }
