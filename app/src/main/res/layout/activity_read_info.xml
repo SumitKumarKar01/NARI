@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,9 +12,10 @@
         android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:navigationIcon=""
-        app:titleTextColor="@android:color/white"
+        android:background="?android:colorBackground"
+        app:navigationIcon="@drawable/arrow_back"
+        app:navigationIconTint="?attr/colorPrimary"
+        app:titleTextColor="?attr/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light">
 
     </com.google.android.material.appbar.MaterialToolbar>
@@ -38,12 +38,31 @@
         android:layout_height="match_parent"
         android:layout_below="@id/headingTextView">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Your 300-word paragraph goes here. Make sure it's long enough to require scrolling."
-            android:textColor="@android:color/black"/>
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/information"
+                android:src="@drawable/placeholder"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true">
+
+            </ImageView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="22sp"
+                android:text="WHO works with Member States and partners to address PCOS as part of its efforts to improve women’s health and reproductive well-being globally. WHO works with governmental and non-governmental partners to enhance public awareness related to PCOS, and to generate guidance to healthcare providers on how it can be identified and treated. In addition, WHO promotes research related to the most effective ways of preventing, diagnosing and treating infertility due to PCOS, and identifies the most important unanswered questions related to it."
+                android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+
+
 
     </ScrollView>
 
