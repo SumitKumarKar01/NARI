@@ -1,2 +1,2 @@
 # NARI
-Nari - A women Halthcare App
+Nari - A women Healthcare App
