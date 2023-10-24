@@ -59,6 +59,8 @@ class info : AppCompatActivity() {
                     true
                 }
                 R.id.page_2 ->{
+                    startActivity(Intent(this,FeedActivity::class.java))
+                    finish()
                     true
                 }
                 R.id.page_3 ->{

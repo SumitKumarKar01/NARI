@@ -12,5 +12,8 @@
     <string name="information">Knowledge Hub</string>
     <string name="pregnancy">Pregnancy</string>
     <string name="maps">Maps</string>
+    <string name="feed">Feed</string>
+    <string name="post">POST</string>
+    <string name="post_hint">Write your post here…</string>
 
 </resources>

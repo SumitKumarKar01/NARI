@@ -1,6 +1,5 @@
 package com.nari.app
 
-import com.nari.app.JsonDatabaseSync
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -80,6 +79,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.page_2 ->{
 
+                    startActivity(Intent(this,FeedActivity::class.java))
+                    finish()
                     true
                 }
                 R.id.page_3 ->{

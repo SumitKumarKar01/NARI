@@ -8,7 +8,7 @@
         android:id="@+id/page_2"
 
         android:icon="@drawable/ic_star"
-        android:title="@string/pregnancy"/>
+        android:title="@string/feed"/>
     <item
         android:id="@+id/page_3"
 
