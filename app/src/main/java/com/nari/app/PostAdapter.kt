@@ -51,35 +51,35 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
 //                holder.commentsRecyclerView.visibility = View.VISIBLE
 //            }
 //        }
-//        // Add comment functionality
-//        holder.btnPostComment.setOnClickListener {
-//            val commentContent = holder.editComment.text.toString()
-//            if (commentContent.isNotEmpty()) {
-//                val userId = auth.currentUser?.uid
-//                if (userId != null) {
-//                    // Generate a unique comment ID
-//                    val commentId = UUID.randomUUID().toString()
-//
-//
-//                    // Create a PostData object
-//                    val newComment = CommentData(
-//                        commentId = commentId,
-//                        postId = post.postId,
-//                        userId = userId,
-//                        content = commentContent,
-//                        upvotes = 0,
-//                        downvotes = 0
-//                        )
-//
-//                    // Save the new comment to Firestore
-//
-//                    saveCommentToFirestore(newComment)
-//                }
-//
-//                // Clear the comment input field
-//                holder.editComment.text.clear()
-//            }
-//        }
+        // Add comment functionality
+        holder.btnPostComment.setOnClickListener {
+            val commentContent = holder.editComment.text.toString()
+            if (commentContent.isNotEmpty()) {
+                val userId = auth.currentUser?.uid
+                if (userId != null) {
+                    // Generate a unique comment ID
+                    val commentId = UUID.randomUUID().toString()
+
+
+                    // Create a PostData object
+                    val newComment = CommentData(
+                        commentId = commentId,
+                        postId = post.postId,
+                        userId = userId,
+                        content = commentContent,
+                        upvotes = 0,
+                        downvotes = 0
+                        )
+
+                    // Save the new comment to Firestore
+
+                    saveCommentToFirestore(newComment)
+                }
+
+                // Clear the comment input field
+                holder.editComment.text.clear()
+            }
+        }
 
         holder.btnUpvote.setOnClickListener {
             Log.d("PostAdapter", "updating vote count ")
@@ -125,21 +125,21 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                 Log.w("PostAdapter", "Error updating vote count on Firestore for post $postId", exception)
             }
     }
-//    private fun saveCommentToFirestore(comment: CommentData) {
-//        val db = FirebaseFirestore.getInstance()
-//        val commentsCollection = db.collection("comments")
-//
-//        commentsCollection
-//            .add(comment)
-//            .addOnSuccessListener {
-//                Log.d("PostAdapter", "Comment added to Firestore: ${comment.commentId}")
-//                // Notify the adapter that the dataset has changed
-//                notifyDataSetChanged()
-//            }
-//            .addOnFailureListener { exception ->
-//                Log.w("PostAdapter", "Error adding comment to Firestore", exception)
-//            }
-//    }
+    private fun saveCommentToFirestore(comment: CommentData) {
+        val db = FirebaseFirestore.getInstance()
+        val commentsCollection = db.collection("comments")
+
+        commentsCollection
+            .add(comment)
+            .addOnSuccessListener {
+                Log.d("PostAdapter", "Comment added to Firestore: ${comment.commentId}")
+                // Notify the adapter that the dataset has changed
+                notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.w("PostAdapter", "Error adding comment to Firestore", exception)
+            }
+    }
 //    private fun getCommentsForPost(postId: String): List<CommentData> {
 //        val comments: MutableList<CommentData> = mutableListOf()
 //
