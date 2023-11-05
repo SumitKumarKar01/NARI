@@ -1,0 +1,158 @@
+<!-- item_post.xml -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <!-- Post Content -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textPostContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="This is a sample post content. This is a sample post content. This is a sample post content"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Action Buttons (Upvote, Downvote, Comment) -->
+    <LinearLayout
+        android:id="@+id/postInteraction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/textPostContent">
+
+        <!-- Upvote Button -->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/btnUpvote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:src="@drawable/ic_upvote_icon" />
+
+            <TextView
+                android:id="@+id/tvUpvoteCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/btnUpvote"
+                android:layout_centerVertical="true"
+                android:text="10"
+                android:textSize="12sp"
+                android:layout_marginStart="10dp"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+
+        <!-- Downvote Button -->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/btnDownvote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="16dp"
+                android:src="@drawable/ic_downvote_icon"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tvDownvoteCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/btnDownvote"
+                android:layout_centerVertical="true"
+                android:text="5"
+                android:textSize="12sp"
+                android:layout_marginStart="10dp"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+
+        <!-- Comment Button -->
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/btnComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackground"
+                android:padding="16dp"
+                android:src="@drawable/ic_comment_icon"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tvCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/btnComment"
+                android:layout_centerVertical="true"
+                android:text="20"
+                android:textSize="12sp"
+                android:layout_marginStart="10dp"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- Commenting Box -->
+    <LinearLayout
+        android:id="@+id/commentingBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:layout_below="@+id/postInteraction">
+
+        <!-- Commenting EditText -->
+        <EditText
+            android:id="@+id/editComment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Write a comment..."
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:inputType="textMultiLine"
+            android:layout_gravity="center_vertical"
+            android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Comment Button -->
+        <ImageButton
+            android:id="@+id/btnPostComment"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_check_mark"
+            android:background="?android:colorBackground"
+            android:text="@string/post"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <!-- RecyclerView to display comments -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</RelativeLayout>

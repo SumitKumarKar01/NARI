@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,6 +13,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="90dp"
         android:fillViewport="true">
 
         <RelativeLayout
@@ -27,12 +27,15 @@
                 android:id="@+id/editTextPost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/post_hint"
-                android:padding="16dp"
-                android:layout_margin="16dp"
-                android:lines="3"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:autofillHints=""
-                android:inputType="textMultiLine"/>
+                android:hint="@string/post_hint"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:padding="16dp" />
 
             <!-- You might want to add a Button to submit the post at the top -->
             <Button
@@ -46,16 +49,13 @@
                 android:layout_marginBottom="5dp"
             />
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewPost"
+                android:id="@+id/item_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/buttonSubmit"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 />
-
-
-
         </RelativeLayout>
     </ScrollView>
 
