@@ -36,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_upvote_icon"
                 android:background="?attr/selectableItemBackground"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                android:padding="16dp"/>
 
             <TextView
                 android:id="@+id/tvcUpvoteCount"
@@ -62,7 +63,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_downvote_icon"
                 android:background="?attr/selectableItemBackground"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                android:padding="16dp"/>
 
             <TextView
                 android:id="@+id/tvcDownvoteCount"

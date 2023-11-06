@@ -37,20 +37,23 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         holder.tvCommentCount.text = post.comments.toString()
 
 
+
+
         // Set up comments RecyclerView
-//        val commentAdapter = CommentAdapter(getCommentsForPost(post.postId))
-//        holder.commentsRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
-//        holder.commentsRecyclerView.adapter = commentAdapter
+        val commentAdapter = CommentAdapter(post.postId)
+        holder.commentsRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
+        holder.commentsRecyclerView.adapter = commentAdapter
+
 
         // Toggle comments visibility
         // Toggle comments visibility
-//        holder.btnComment.setOnClickListener {
-//            if (holder.commentsRecyclerView.visibility == View.VISIBLE) {
-//                holder.commentsRecyclerView.visibility = View.GONE
-//            } else {
-//                holder.commentsRecyclerView.visibility = View.VISIBLE
-//            }
-//        }
+        holder.btnComment.setOnClickListener {
+            if (holder.commentsRecyclerView.visibility == View.VISIBLE) {
+                holder.commentsRecyclerView.visibility = View.GONE
+            } else {
+                holder.commentsRecyclerView.visibility = View.VISIBLE
+            }
+        }
         // Add comment functionality
         holder.btnPostComment.setOnClickListener {
             val commentContent = holder.editComment.text.toString()
@@ -74,6 +77,9 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                     // Save the new comment to Firestore
 
                     saveCommentToFirestore(newComment)
+                    post.comments++
+                    holder.tvCommentCount.text = post.comments.toString()
+                    updateVoteCountOnFirestore(post.postId, "comments", post.comments)
                 }
 
                 // Clear the comment input field
@@ -125,14 +131,13 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                 Log.w("PostAdapter", "Error updating vote count on Firestore for post $postId", exception)
             }
     }
-    private fun saveCommentToFirestore(comment: CommentData) {
+    private fun saveCommentToFirestore(commentData: CommentData) {
         val db = FirebaseFirestore.getInstance()
-        val commentsCollection = db.collection("comments")
-
-        commentsCollection
-            .add(comment)
+        db.collection("comments")
+            .document(commentData.commentId)
+            .set(commentData)
             .addOnSuccessListener {
-                Log.d("PostAdapter", "Comment added to Firestore: ${comment.commentId}")
+                Log.d("PostAdapter", "Comment added to Firestore: ${commentData.commentId}")
                 // Notify the adapter that the dataset has changed
                 notifyDataSetChanged()
             }
@@ -140,28 +145,7 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                 Log.w("PostAdapter", "Error adding comment to Firestore", exception)
             }
     }
-//    private fun getCommentsForPost(postId: String): List<CommentData> {
-//        val comments: MutableList<CommentData> = mutableListOf()
-//
-//        val db = FirebaseFirestore.getInstance()
-//        val commentsCollection = db.collection("comments")
-//
-//        commentsCollection
-//            .whereEqualTo("postId", postId)
-//            .get()
-//            .addOnSuccessListener { result ->
-//                for (document in result) {
-//                    val comment = document.toObject(CommentData::class.java)
-//                    comments.add(comment)
-//                }
-//                notifyDataSetChanged()
-//            }
-//            .addOnFailureListener { exception ->
-//                Log.w("PostAdapter", "Error getting comments for post $postId", exception)
-//            }
-//
-//        return comments
-//    }
+
 
 
 
