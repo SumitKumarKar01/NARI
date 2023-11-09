@@ -4,6 +4,7 @@
     <string name="pass">Password</string>
     <string name="confirmPass">Confirm Password</string>
     <string name="login">LOGIN</string>
+    <string name="logout">Logout</string>
     <string name="reg">Register</string>
     <string name="confirm">Confirm</string>
     <string name="pin">PIN</string>
@@ -15,5 +16,6 @@
     <string name="feed">Feed</string>
     <string name="post">POST</string>
     <string name="post_hint">Write your post here…</string>
+    <string name="settings">Settings</string>
 
 </resources>

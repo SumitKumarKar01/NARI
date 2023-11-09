@@ -6,8 +6,12 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberTopAppBarState
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         if(pinStatus){
             setContentView(R.layout.activity_main)
+            navigation()
         }
         else{
             if (isPinSet()){
@@ -47,24 +52,50 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 setContentView(R.layout.activity_main)
+                navigation()
             }
         }
 
 
 
+        // Create an instance of DataUpdater and call updateDataFromJson
+        val dataUpdater = JsonDatabaseSync(this)
+        dataUpdater.updateDataFromJson()
 
+        // Retrieve and log data from the database
+        val itemRepository = ItemRepository(this)
+        val itemList = itemRepository.getAllItems()
 
-
-        val button = findViewById<Button>(R.id.button)
-
-        button.setOnClickListener{
-            auth.signOut()
-            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
-//            val intent = Intent(this,Login::class.java)
-//            startActivity(intent)
-
-            finish() // Close the current activity
+        // Log the items to the console
+        for (item in itemList) {
+            Log.d("DatabaseLog", "ID: ${item.id}, Title: ${item.title}, Description: ${item.description}, Image: ${item.image}, Category: ${item.category}")
         }
+    }
+
+    private fun navigation(){
+
+        //Top Navigation
+        val topNavigationView: MaterialToolbar = findViewById(R.id.topAppBar)
+
+        topNavigationView.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_settings -> {
+                    val intent = Intent(this,SettingsActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    true
+                }
+                R.id.action_logout -> {
+                    auth.signOut()
+                    Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+                    finish() // Close the current activity
+                    true
+                }
+                else -> false
+            }
+        }
+
+
 
         //Bottom Navigation
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.info)
@@ -92,18 +123,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Create an instance of DataUpdater and call updateDataFromJson
-        val dataUpdater = JsonDatabaseSync(this)
-        dataUpdater.updateDataFromJson()
-
-        // Retrieve and log data from the database
-        val itemRepository = ItemRepository(this)
-        val itemList = itemRepository.getAllItems()
-
-        // Log the items to the console
-        for (item in itemList) {
-            Log.d("DatabaseLog", "ID: ${item.id}, Title: ${item.title}, Description: ${item.description}, Image: ${item.image}, Category: ${item.category}")
-        }
     }
 
 

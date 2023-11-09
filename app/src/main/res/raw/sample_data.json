@@ -40,5 +40,29 @@
     "description": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
     "image": "image_url_2",
     "category": "Category B"
+  },
+  {
+    "title": "Understanding PCOS",
+    "description": "Polycystic Ovary Syndrome (PCOS) is a common hormonal disorder that affects people with ovaries. It is characterized by enlarged ovaries containing small cysts. The exact cause is unknown, but factors such as genetics, insulin resistance, and inflammation may contribute to its development. Common symptoms include irregular periods, acne, weight gain, and excess hair growth. PCOS can impact fertility and increase the risk of other health issues. Early diagnosis and lifestyle changes, such as maintaining a healthy diet and regular exercise, can help manage symptoms and improve overall well-being.",
+    "image": "image_url_1",
+    "category": "Period"
+  },
+  {
+    "title": "Lifestyle Management for PCOS",
+    "description": "Managing PCOS involves adopting a healthy lifestyle. Regular exercise helps regulate hormones and improve insulin sensitivity. A balanced diet with whole foods, fruits, and vegetables is essential for weight management and hormonal balance. Additionally, stress management through activities like meditation and sufficient sleep can positively impact PCOS symptoms. Medications may be prescribed by healthcare professionals to address specific symptoms or regulate menstrual cycles. Lifestyle changes, coupled with medical interventions, can significantly improve the quality of life for individuals with PCOS.",
+    "image": "image_url_1",
+    "category": "Period"
+  },
+  {
+    "title": "PCOS and Fertility",
+    "description": "PCOS can affect fertility due to irregular ovulation and hormonal imbalances. Individuals with PCOS may experience challenges in conceiving. Fertility treatments such as ovulation induction, in vitro fertilization (IVF), or lifestyle changes may be recommended. It's essential for those planning to conceive to work closely with healthcare professionals to create a personalized fertility plan. While PCOS can present fertility challenges, early diagnosis and targeted interventions can increase the chances of successful conception and a healthy pregnancy.",
+    "image": "image_url_1",
+    "category": "Period"
+  },
+  {
+    "title": "PCOS and Mental Health",
+    "description": "PCOS not only affects physical health but can also impact mental well-being. Hormonal imbalances, symptoms like acne or excess hair growth, and fertility challenges may contribute to emotional stress. It's crucial for individuals with PCOS to prioritize mental health by seeking support from healthcare professionals, joining support groups, and practicing self-care. Addressing mental health alongside physical symptoms is integral to a comprehensive PCOS management plan. Open communication with healthcare providers can lead to a more holistic approach to well-being.",
+    "image": "image_url_1",
+    "category": "Period"
   }
 ]
