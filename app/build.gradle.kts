@@ -6,6 +6,7 @@ plugins {
 
 }
 
+
 android {
     namespace = "com.nari.app"
     compileSdk = 34
@@ -63,7 +64,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.firebase:firebase-firestore:24.9.1")
     testImplementation("junit:junit:4.13.2")
@@ -73,7 +74,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("com.google.android.material:material:1.9.0")
 
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
@@ -85,6 +85,10 @@ dependencies {
     implementation ("com.firebaseui:firebase-ui-auth:7.2.0")
 
     implementation ("com.facebook.android:facebook-login:latest.release")
+
+
+    //Calendar View
+    implementation ("com.applandeo:material-calendar-view:1.9.0-rc03")
 
 
 

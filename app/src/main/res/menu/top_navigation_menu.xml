@@ -4,6 +4,12 @@
     android:theme="@style/AppTheme">
 
     <item
+        android:id="@+id/action_edit"
+        android:title="Edit"
+        android:icon="@drawable/edit"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_settings"
         android:title="@string/settings"
         android:icon="@drawable/settings"

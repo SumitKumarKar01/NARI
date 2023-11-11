@@ -59,7 +59,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Registration success
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this,Login::class.java))
+                    startActivity(Intent(this,DatePickerActivity::class.java))
                     finish()
                 } else {
                     // If registration fails, display a message to the user.

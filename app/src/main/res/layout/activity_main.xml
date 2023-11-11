@@ -1,44 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/AppTheme"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".DatePickerActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/topAppBarHolder">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/topAppBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minHeight="?attr/actionBarSize"
-                app:menu="@menu/top_navigation_menu"
-                />
-        </com.google.android.material.appbar.AppBarLayout>
+                app:menu="@menu/top_navigation_menu" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical"-->
-<!--        android:gravity="center">-->
+    <com.applandeo.materialcalendarview.CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topAppBarHolder"
+        android:layout_marginBottom="16dp"
+        app:headerColor="?android:colorBackground"
+        app:headerLabelColor="?attr/colorPrimary"
+        app:previousButtonSrc="@drawable/arrow_back"
+        app:forwardButtonSrc="@drawable/arrow_forward"
+        app:todayLabelColor="?attr/colorPrimary"
+        app:highlightedDaysLabelsColor="?attr/colorPrimary"/>
 
-<!--        <Button-->
-<!--            android:id="@+id/logoutbutton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/logout"-->
-<!--            android:layout_gravity="center"-->
-<!--            />-->
-<!--    </LinearLayout>-->
+
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/info"
@@ -49,5 +46,11 @@
         android:layout_alignParentBottom="true"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_menu" />
+
+
+
+
+
+
 
 </RelativeLayout>

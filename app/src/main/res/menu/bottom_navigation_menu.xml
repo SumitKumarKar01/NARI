@@ -16,9 +16,5 @@
 
         android:icon="@drawable/ic_star"
         android:title="@string/information"/>
-    <item
-        android:id="@+id/page_4"
 
-        android:icon="@drawable/ic_star"
-        android:title="@string/maps"/>
 </menu>

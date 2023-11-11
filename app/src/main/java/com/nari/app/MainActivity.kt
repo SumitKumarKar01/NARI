@@ -14,6 +14,10 @@ import androidx.compose.material3.rememberTopAppBarState
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.applandeo.materialcalendarview.CalendarView
+import com.applandeo.materialcalendarview.EventDay
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -70,7 +74,45 @@ class MainActivity : AppCompatActivity() {
         for (item in itemList) {
             Log.d("DatabaseLog", "ID: ${item.id}, Title: ${item.title}, Description: ${item.description}, Image: ${item.image}, Category: ${item.category}")
         }
+
+        //Calendar
+        calendar()
+        val predictedDates = predictNextPeriod()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val predictedStartDate = dateFormat.format(predictedDates.first)
+        val predictedEndDate = dateFormat.format(predictedDates.second)
+
+        Log.d("PeriodPrediction", "Predicted Next Period Start Date: $predictedStartDate")
+        Log.d("PeriodPrediction", "Predicted Next Period End Date: $predictedEndDate")
     }
+
+    private fun calendar() {
+        val calendarView: CalendarView = findViewById(R.id.calendarView)
+
+        // Predict the next period start and end date based on the fixed previous end date
+        val predictedDates = predictNextPeriod()
+        val predictedStartDate = Calendar.getInstance()
+        predictedStartDate.time = predictedDates.first
+
+        val predictedEndDate = Calendar.getInstance()
+        predictedEndDate.time = predictedDates.second
+
+        // Create a list of Calendar instances to represent the range
+        val datesInRange = ArrayList<Calendar>()
+        val currentDate = predictedStartDate.clone() as Calendar
+
+        while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
+            datesInRange.add(currentDate.clone() as Calendar)
+            currentDate.add(Calendar.DATE, 1)
+        }
+
+        // Create a list of EventDay objects to represent the range
+        val events = datesInRange.map { EventDay(it, R.drawable.ic_selected_day) }
+
+        // Set the selected dates in the CalendarView
+        calendarView.setEvents(events)
+    }
+
 
     private fun navigation(){
 
@@ -89,6 +131,12 @@ class MainActivity : AppCompatActivity() {
                     auth.signOut()
                     Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
                     finish() // Close the current activity
+                    true
+                }
+                R.id.action_edit -> {
+                    val intent = Intent(this,DatePickerActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 else -> false
@@ -142,6 +190,43 @@ class MainActivity : AppCompatActivity() {
     private fun isPinSet(): Boolean {
         // Check if PIN is already set
         return sharedPreferences.getBoolean("isPinSet", false)
+    }
+
+
+    fun predictNextPeriod(): Pair<Date, Date> {
+
+        val periodDate: SharedPreferences = getSharedPreferences("PeriodDate", Context.MODE_PRIVATE)
+        val previousEndDateString = periodDate.getString("selectedDate", null)
+
+
+        val calendar = Calendar.getInstance()
+
+        // Set the fixed previous period end date
+        // Set the fixed previous period end date or use the retrieved date
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val previousEndDate = if (previousEndDateString != null) {
+            dateFormat.parse(previousEndDateString)
+        } else {
+            // If not available in SharedPreferences, use a default date or handle accordingly
+            dateFormat.parse("2023-11-01")
+        }
+
+        Log.d("PeriodPrediction", "Previous Period End Date: $previousEndDate")
+
+        calendar.time = previousEndDate
+
+        // Assuming a menstrual cycle length of 28 days, you can adjust this value accordingly
+        val cycleLength = 28
+
+        // Predict next period start date
+        calendar.add(Calendar.DAY_OF_MONTH, cycleLength)
+        val nextStartDate = calendar.time
+
+        // Predict next period end date
+        calendar.add(Calendar.DAY_OF_MONTH, 4) // Assuming a period lasts for 5 days, you can adjust this value
+        val nextEndDate = calendar.time
+
+        return Pair(nextStartDate, nextEndDate)
     }
 
 
