@@ -4,17 +4,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.nari.app.R  // Replace with your actual package name
-import com.nari.app.PostData
 import java.util.UUID
 
 class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -157,7 +153,7 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         val tvUpvoteCount: TextView = itemView.findViewById(R.id.tvUpvoteCount)
         val tvDownvoteCount: TextView = itemView.findViewById(R.id.tvDownvoteCount)
         val tvCommentCount: TextView = itemView.findViewById(R.id.tvCommentCount)
-        val commentingBox: LinearLayout = itemView.findViewById(R.id.commentingBox)
+//        val commentingBox: LinearLayout = itemView.findViewById(R.id.commentingBox)
         val editComment: EditText = itemView.findViewById(R.id.editComment)
         val btnPostComment: ImageButton = itemView.findViewById(R.id.btnPostComment)
         val commentsRecyclerView: RecyclerView = itemView.findViewById(R.id.commentsRecyclerView)

@@ -16,8 +16,18 @@
     <string name="feed">Feed</string>
     <string name="post">POST</string>
     <string name="post_hint">Write your post here…</string>
+    <string name="comment_hint">Write your comment here…</string>
     <string name="settings">Settings</string>
     <string name="theme">Theme</string>
     <string name="back">Back</string>
+    <string name="registerMsg">Don\'t have an account? Register</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="dislike">Dislike</string>
+    <string name="sampleLikeCount">10</string>
+    <string name="sampleDislikeCount">5</string>
+    <string name="sampleCommentCount">20</string>
+    <string name="samplePostContent">This is a sample post content.</string>
+    <string name="sampleCommentContent">This is a sample comment content.</string>
 
 </resources>

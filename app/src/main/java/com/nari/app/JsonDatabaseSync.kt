@@ -1,8 +1,6 @@
 package com.nari.app
 
 import android.content.Context
-import com.nari.app.JsonParser
-import com.nari.app.R
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

@@ -11,11 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:text="This is a sample post content. This is a sample post content. This is a sample post content"
+        android:text="@string/samplePostContent"
         android:layout_marginBottom="8dp"/>
 
     <!-- Action Buttons (Upvote, Downvote, Comment) -->
     <LinearLayout
+        android:baselineAligned="false"
         android:id="@+id/postInteraction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +38,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="16dp"
-                android:src="@drawable/ic_upvote_icon" />
+                android:src="@drawable/ic_upvote_icon"
+                android:contentDescription="@string/like"/>
 
             <TextView
                 android:id="@+id/tvUpvoteCount"
@@ -45,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/btnUpvote"
                 android:layout_centerVertical="true"
-                android:text="10"
+                android:text="@string/sampleLikeCount"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_centerHorizontal="true"/>
@@ -66,7 +68,8 @@
                 android:padding="16dp"
                 android:src="@drawable/ic_downvote_icon"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:contentDescription="@string/dislike"/>
 
             <TextView
                 android:id="@+id/tvDownvoteCount"
@@ -74,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/btnDownvote"
                 android:layout_centerVertical="true"
-                android:text="5"
+                android:text="@string/sampleDislikeCount"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_centerHorizontal="true"/>
@@ -96,7 +99,8 @@
                 android:padding="16dp"
                 android:src="@drawable/ic_comment_icon"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:contentDescription="@string/comment"/>
 
             <TextView
                 android:id="@+id/tvCommentCount"
@@ -104,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/btnComment"
                 android:layout_centerVertical="true"
-                android:text="20"
+                android:text="@string/sampleCommentCount"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_centerHorizontal="true"/>
@@ -126,7 +130,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Write a comment..."
+            android:hint="@string/comment_hint"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:textSize="18sp"
@@ -134,7 +138,9 @@
             android:layout_gravity="center_vertical"
             android:padding="16dp"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:importantForAutofill="no"
+            />
 
         <!-- Comment Button -->
         <ImageButton
@@ -146,7 +152,8 @@
             android:background="?android:colorBackground"
             android:text="@string/post"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:contentDescription="@string/confirm"/>
     </LinearLayout>
 
     <!-- RecyclerView to display comments -->

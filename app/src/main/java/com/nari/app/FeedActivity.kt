@@ -21,7 +21,7 @@ class FeedActivity : AppCompatActivity() {
     private lateinit var buttonSubmit: Button
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
-    val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
     private lateinit var recyclerView: RecyclerView
     private lateinit var postAdapter: PostAdapter
     private val posts: MutableList<PostData> = mutableListOf()
@@ -36,7 +36,7 @@ class FeedActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         // Initialize UI elements
-        recyclerView = findViewById<RecyclerView>(R.id.item_post)
+        recyclerView = findViewById(R.id.item_post)
 
         // Set up RecyclerView and Adapter
         postAdapter = PostAdapter(posts)

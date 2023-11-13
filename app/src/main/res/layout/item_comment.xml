@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text="This is a sample comment content."
+        android:text="@string/sampleCommentContent"
         android:layout_marginBottom="8dp"/>
 
     <!-- Action Buttons (Upvote, Downvote) -->
@@ -22,7 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/textCommentContent">
+        android:layout_below="@id/textCommentContent"
+        android:baselineAligned="false">
 
         <!-- Upvote Button -->
         <RelativeLayout
@@ -37,7 +38,8 @@
                 android:src="@drawable/ic_upvote_icon"
                 android:background="?attr/selectableItemBackground"
                 android:layout_centerHorizontal="true"
-                android:padding="16dp"/>
+                android:padding="16dp"
+                android:contentDescription="@string/like"/>
 
             <TextView
                 android:id="@+id/tvcUpvoteCount"
@@ -45,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/btnCommentUpvote"
                 android:layout_centerVertical="true"
-                android:text="10"
+                android:text="@string/sampleLikeCount"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_centerHorizontal="true"/>
@@ -64,7 +66,8 @@
                 android:src="@drawable/ic_downvote_icon"
                 android:background="?attr/selectableItemBackground"
                 android:layout_centerHorizontal="true"
-                android:padding="16dp"/>
+                android:padding="16dp"
+                android:contentDescription="@string/dislike"/>
 
             <TextView
                 android:id="@+id/tvcDownvoteCount"
@@ -72,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/btnCommentDownvote"
                 android:layout_centerVertical="true"
-                android:text="5"
+                android:text="@string/sampleDislikeCount"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
                 android:layout_centerHorizontal="true"/>

@@ -1,10 +1,9 @@
 package com.nari.app
 
-import com.nari.app.JsonDatabaseSync
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
 class ReadInfoActivity : AppCompatActivity() {

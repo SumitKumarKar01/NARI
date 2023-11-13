@@ -1,7 +1,6 @@
 package com.nari.app
 
 import android.content.Context
-import android.util.Log
 import org.json.JSONArray
 
 class JsonParser(private val context: Context) {

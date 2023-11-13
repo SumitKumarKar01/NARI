@@ -3,7 +3,6 @@ package com.nari.app
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.util.Log
 
 //import android.database.sqlite.SQLiteDatabase
 

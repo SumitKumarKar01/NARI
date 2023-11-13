@@ -7,8 +7,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.nari.app.R  // Replace with your actual package name
-import com.nari.app.CommentData  // Replace with your actual package and data model
 
 class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
     private val comments: MutableList<CommentData> = mutableListOf()
