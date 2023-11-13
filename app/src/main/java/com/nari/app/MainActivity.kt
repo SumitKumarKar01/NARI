@@ -6,11 +6,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
 import android.widget.Toast
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberTopAppBarState
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -78,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         //Calendar
         calendar()
         val predictedDates = predictNextPeriod()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val predictedStartDate = dateFormat.format(predictedDates.first)
         val predictedEndDate = dateFormat.format(predictedDates.second)
 
@@ -193,7 +189,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun predictNextPeriod(): Pair<Date, Date> {
+    private fun predictNextPeriod(): Pair<Date, Date> {
 
         val periodDate: SharedPreferences = getSharedPreferences("PeriodDate", Context.MODE_PRIVATE)
         val previousEndDateString = periodDate.getString("selectedDate", null)
