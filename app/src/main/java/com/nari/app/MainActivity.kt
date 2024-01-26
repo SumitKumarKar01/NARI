@@ -209,7 +209,9 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("PeriodPrediction", "Previous Period End Date: $previousEndDate")
 
-        calendar.time = previousEndDate
+        if (previousEndDate != null) {
+            calendar.time = previousEndDate
+        }
 
         // Assuming a menstrual cycle length of 28 days, you can adjust this value accordingly
         val cycleLength = 28
