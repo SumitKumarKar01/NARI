@@ -33,7 +33,7 @@ class DatePickerActivity : AppCompatActivity() {
 
         // Hide DatePicker
         datePicker.visibility = View.INVISIBLE
-        startActivity(Intent(this,Login::class.java))
+        startActivity(Intent(this,MainActivity::class.java))
         finish()
     }
 
