@@ -84,26 +84,105 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         }
 
         holder.btnUpvote.setOnClickListener {
-            Log.d("PostAdapter", "updating vote count ")
-            // Increment upvote count locally
-            post.upvotes++
-            // Update the UI
-            holder.tvUpvoteCount.text = post.upvotes.toString()
-            // Update upvote count on Firestore
-            updateVoteCountOnFirestore(post.postId, "upvotes", post.upvotes)
+            val userId = auth.currentUser?.uid
+            if (userId != null) {
+                firestore.collection("votes")
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("postId", post.postId)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val documents = task.result?.documents
+                            val document = if (!documents.isNullOrEmpty()) {
+                                documents[0]
+                            } else {
+                                null
+                            }
+                            if (document != null) {
+                                val voteType = document.getString("voteType")
+                                if (voteType == "downvote") {
+                                    // The user has already downvoted this post, so decrement the downvote count, increment the upvote count and update the vote type to "upvote"
+                                    post.downvotes--
+                                    post.upvotes++
+                                    holder.tvDownvoteCount.text = post.downvotes.toString()
+                                    holder.tvUpvoteCount.text = post.upvotes.toString()
+                                    updateVoteCountOnFirestore(post.postId, "downvotes", post.downvotes)
+                                    updateVoteCountOnFirestore(post.postId, "upvotes", post.upvotes)
+                                    document.reference.update("voteType", "upvote")
+                                }
+                                if (voteType == "upvote"){
+                                    // The user has already upvoted this post, so decrement the upvote count and update the vote type to "none"
+                                    post.upvotes--
+                                    holder.tvUpvoteCount.text = post.upvotes.toString()
+                                    updateVoteCountOnFirestore(post.postId, "upvotes", post.upvotes)
+                                    document.reference.delete()
+                                }
 
-            notifyDataSetChanged()
+                            } else {
+                                // The user hasn't voted on this post yet, so increment the upvote count and add a document to the votes collection with the vote type as "upvote"
+                                post.upvotes++
+                                holder.tvUpvoteCount.text = post.upvotes.toString()
+                                updateVoteCountOnFirestore(post.postId, "upvotes", post.upvotes)
+                                val voteId = UUID.randomUUID().toString()
+                                val vote = mapOf("userId" to userId, "postId" to post.postId, "voteType" to "upvote")
+                                firestore.collection("votes").document(voteId).set(vote)
+                            }
+                        } else {
+                            Log.w("PostAdapter", "Error checking votes", task.exception)
+                        }
+                    }
+            }
         }
 
         holder.btnDownvote.setOnClickListener {
-            // Increment downvote count locally
-            post.downvotes++
-            // Update the UI
-            holder.tvDownvoteCount.text = post.downvotes.toString()
-            // Update downvote count on Firestore
-            updateVoteCountOnFirestore(post.postId, "downvotes", post.downvotes)
+            val userId = auth.currentUser?.uid
+            if (userId != null) {
+                firestore.collection("votes")
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("postId", post.postId)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val documents = task.result?.documents
+                            val document = if (!documents.isNullOrEmpty()) {
+                                documents[0]
+                            } else {
+                                null
+                            }
+                            if (document != null) {
+                                val voteType = document.getString("voteType")
+                                if (voteType == "upvote") {
+                                    // The user has already upvoted this post, so decrement the upvote count, increment the downvote count and update the vote type to "downvote"
+                                    post.upvotes--
+                                    post.downvotes++
+                                    holder.tvUpvoteCount.text = post.upvotes.toString()
+                                    holder.tvDownvoteCount.text = post.downvotes.toString()
+                                    updateVoteCountOnFirestore(post.postId, "upvotes", post.upvotes)
+                                    updateVoteCountOnFirestore(post.postId, "downvotes", post.downvotes)
+                                    document.reference.update("voteType", "downvote")
+                                }
+                                if (voteType == "downvote"){
+                                    // The user has already downvoted this post, so decrement the downvote count and update the vote type to "none"
+                                    post.downvotes--
+                                    holder.tvDownvoteCount.text = post.downvotes.toString()
+                                    updateVoteCountOnFirestore(post.postId, "downvotes", post.downvotes)
+                                    document.reference.delete()
+                                }
 
-            notifyDataSetChanged()
+                            } else {
+                                // The user hasn't voted on this post yet, so increment the downvote count and add a document to the votes collection with the vote type as "downvote"
+                                post.downvotes++
+                                holder.tvDownvoteCount.text = post.downvotes.toString()
+                                updateVoteCountOnFirestore(post.postId, "downvotes", post.downvotes)
+                                val voteId = UUID.randomUUID().toString()
+                                val vote = mapOf("userId" to userId, "postId" to post.postId, "voteType" to "downvote")
+                                firestore.collection("votes").document(voteId).set(vote)
+                            }
+                        } else {
+                            Log.w("PostAdapter", "Error checking votes", task.exception)
+                        }
+                    }
+            }
         }
 
     }
