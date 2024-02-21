@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.DocumentSnapshot
 import java.util.UUID
 
 
@@ -131,9 +132,12 @@ class FeedActivity : AppCompatActivity() {
             }
     }
 
+    private var lastVisible : DocumentSnapshot? = null
+    private val limit = 5L
+
     private fun fetchPostsFromFirestore() {
         db.collection("posts")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .orderBy("timestamp", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshots, error ->
                 if (error != null) {
                     Log.w("FeedActivity", "listen:error", error)

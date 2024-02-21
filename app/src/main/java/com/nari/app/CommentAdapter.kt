@@ -8,12 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.DocumentChange
 import java.util.UUID
 
 class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
     private val comments: MutableList<CommentData> = mutableListOf()
-    private lateinit var firestore: FirebaseFirestore
-    private lateinit var auth: FirebaseAuth
+    private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
 
     init {
@@ -33,8 +35,7 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val comment = comments[position]
-        auth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
+
 
         holder.commentContent.text = comment.content
         // Handle upvotes and downvotes logic as needed
@@ -136,28 +137,38 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
     }
 
     private fun getCommentsForPost() {
-        val db = FirebaseFirestore.getInstance()
-        val commentsCollection = db.collection("comments")
-
-        commentsCollection
+        firestore.collection("comments")
             .whereEqualTo("postId", postId)
-            .get()
-            .addOnSuccessListener { result ->
-                val oldSize = comments.size
-                comments.clear()
-                for (document in result) {
-                    val comment = document.toObject(CommentData::class.java)
-                    comments.add(comment)
+            .orderBy("timestamp", Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshots, error ->
+                if (error != null) {
+                    Log.w("CommentAdapter", "listen:error", error)
+                    return@addSnapshotListener
                 }
-                val newSize = comments.size
-                if (newSize > oldSize) {
-                    notifyItemInserted(newSize - 1)
-                } else if (newSize < oldSize) {
-                    notifyItemRemoved(oldSize - 1)
+
+                for (dc in snapshots!!.documentChanges) {
+                    val comment = dc.document.toObject(CommentData::class.java)
+                    when (dc.type) {
+                        DocumentChange.Type.ADDED -> {
+                            comments.add(comment)
+                            notifyItemInserted(comments.size - 1)
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            val index = comments.indexOfFirst { it.commentId == comment.commentId }
+                            if (index != -1) {
+                                comments[index] = comment
+                                notifyItemChanged(index)
+                            }
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            val index = comments.indexOfFirst { it.commentId == comment.commentId }
+                            if (index != -1) {
+                                comments.removeAt(index)
+                                notifyItemRemoved(index)
+                            }
+                        }
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("CommentAdapter", "Error getting comments for post $postId", exception)
             }
     }
 
