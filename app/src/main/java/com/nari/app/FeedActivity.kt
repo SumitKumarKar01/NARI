@@ -76,7 +76,9 @@ class FeedActivity : AppCompatActivity() {
                         content = postContent,
                         upvotes = 0,
                         downvotes = 0,
-                        comments = 0)
+                        comments = 0,
+                        timestamp = com.google.firebase.Timestamp.now()
+                    )
 
                     // Add the post to Firestore
 
@@ -131,12 +133,18 @@ class FeedActivity : AppCompatActivity() {
         db.collection("posts")
             .get()
             .addOnSuccessListener { result ->
+                val oldSize = posts.size
                 posts.clear() // Clear the existing posts
                 for (document in result) {
                     val post = document.toObject(PostData::class.java)
                     posts.add(post)
                 }
-                postAdapter.notifyDataSetChanged()
+                val newSize = posts.size
+                if (newSize > oldSize) {
+                    postAdapter.notifyItemInserted(newSize - 1)
+                } else if (newSize < oldSize) {
+                    postAdapter.notifyItemRemoved(oldSize - 1)
+                }
             }
             .addOnFailureListener { exception ->
                 Log.w("FeedActivity", "Error getting documents.", exception)

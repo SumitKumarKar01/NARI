@@ -67,7 +67,8 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                         userId = userId,
                         content = commentContent,
                         upvotes = 0,
-                        downvotes = 0
+                        downvotes = 0,
+                        timestamp = com.google.firebase.Timestamp.now()
                         )
 
                     // Save the new comment to Firestore
@@ -213,8 +214,8 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
             .set(commentData)
             .addOnSuccessListener {
                 Log.d("PostAdapter", "Comment added to Firestore: ${commentData.commentId}")
-                // Notify the adapter that the dataset has changed
-                notifyDataSetChanged()
+                // Notify the adapter that an item has been inserted
+                notifyItemInserted(posts.size - 1)
             }
             .addOnFailureListener { exception ->
                 Log.w("PostAdapter", "Error adding comment to Firestore", exception)
