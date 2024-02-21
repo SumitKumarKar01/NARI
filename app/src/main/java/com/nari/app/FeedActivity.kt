@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.DocumentChange
 import java.util.UUID
 
 
@@ -131,23 +133,36 @@ class FeedActivity : AppCompatActivity() {
 
     private fun fetchPostsFromFirestore() {
         db.collection("posts")
-            .get()
-            .addOnSuccessListener { result ->
-                val oldSize = posts.size
-                posts.clear() // Clear the existing posts
-                for (document in result) {
-                    val post = document.toObject(PostData::class.java)
-                    posts.add(post)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshots, error ->
+                if (error != null) {
+                    Log.w("FeedActivity", "listen:error", error)
+                    return@addSnapshotListener
                 }
-                val newSize = posts.size
-                if (newSize > oldSize) {
-                    postAdapter.notifyItemInserted(newSize - 1)
-                } else if (newSize < oldSize) {
-                    postAdapter.notifyItemRemoved(oldSize - 1)
+
+                for (dc in snapshots!!.documentChanges) {
+                    val post = dc.document.toObject(PostData::class.java)
+                    when (dc.type) {
+                        DocumentChange.Type.ADDED -> {
+                            posts.add(0, post) // Add the new post at the beginning of the list
+                            postAdapter.notifyItemInserted(0)
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            val index = posts.indexOfFirst { it.postId == post.postId }
+                            if (index != -1) {
+                                posts[index] = post
+                                postAdapter.notifyItemChanged(index)
+                            }
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            val index = posts.indexOfFirst { it.postId == post.postId }
+                            if (index != -1) {
+                                posts.removeAt(index)
+                                postAdapter.notifyItemRemoved(index)
+                            }
+                        }
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("FeedActivity", "Error getting documents.", exception)
             }
     }
     private fun showToast(message: String) {

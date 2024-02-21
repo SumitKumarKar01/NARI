@@ -81,6 +81,11 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
 
                 // Clear the comment input field
                 holder.editComment.text.clear()
+
+                //holder.commentsRecyclerView.visibility = View.VISIBLE
+
+
+
             }
         }
 
@@ -186,6 +191,7 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
             }
         }
 
+
     }
 
     override fun getItemCount(): Int {
@@ -215,7 +221,8 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
             .addOnSuccessListener {
                 Log.d("PostAdapter", "Comment added to Firestore: ${commentData.commentId}")
                 // Notify the adapter that an item has been inserted
-                notifyItemInserted(posts.size - 1)
+                //notifyItemInserted(posts.size - 1)
+                notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 Log.w("PostAdapter", "Error adding comment to Firestore", exception)
