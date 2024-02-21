@@ -139,7 +139,7 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
     private fun getCommentsForPost() {
         firestore.collection("comments")
             .whereEqualTo("postId", postId)
-            .orderBy("timestamp", Query.Direction.ASCENDING)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshots, error ->
                 if (error != null) {
                     Log.w("CommentAdapter", "listen:error", error)

@@ -132,8 +132,6 @@ class FeedActivity : AppCompatActivity() {
             }
     }
 
-    private var lastVisible : DocumentSnapshot? = null
-    private val limit = 5L
 
     private fun fetchPostsFromFirestore() {
         db.collection("posts")
