@@ -6,10 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.UUID
 
 class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
     private val comments: MutableList<CommentData> = mutableListOf()
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
 
     init {
@@ -29,6 +33,8 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val comment = comments[position]
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         holder.commentContent.text = comment.content
         // Handle upvotes and downvotes logic as needed
@@ -36,26 +42,95 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
         holder.CmntdownvotesTextView.text = comment.downvotes.toString()
 
         holder.btnCmntUpvote.setOnClickListener {
-            Log.d("PostAdapter", "updating vote count ")
-            // Increment upvote count locally
-            comment.upvotes++
-            // Update the UI
-            holder.CmntupvotesTextView.text = comment.upvotes.toString()
-            // Update upvote count on Firestore
-            updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
-
-            notifyDataSetChanged()
+            val userId = auth.currentUser?.uid
+            if (userId != null) {
+                firestore.collection("votes")
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("commentId", comment.commentId)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val documents = task.result?.documents
+                            val document = if (!documents.isNullOrEmpty()) {
+                                documents[0]
+                            } else {
+                                null
+                            }
+                            if (document != null) {
+                                val voteType = document.getString("voteType")
+                                if (voteType == "downvote") {
+                                    comment.downvotes--
+                                    comment.upvotes++
+                                    holder.CmntdownvotesTextView.text = comment.downvotes.toString()
+                                    holder.CmntupvotesTextView.text = comment.upvotes.toString()
+                                    updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
+                                    updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
+                                    document.reference.update("voteType", "upvote")
+                                } else if (voteType == "upvote") {
+                                    comment.upvotes--
+                                    holder.CmntupvotesTextView.text = comment.upvotes.toString()
+                                    updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
+                                    document.reference.delete()
+                                }
+                            } else {
+                                comment.upvotes++
+                                holder.CmntupvotesTextView.text = comment.upvotes.toString()
+                                updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
+                                val voteId = UUID.randomUUID().toString()
+                                val vote = mapOf("userId" to userId, "commentId" to comment.commentId, "voteType" to "upvote")
+                                firestore.collection("votes").document(voteId).set(vote)
+                            }
+                        } else {
+                            Log.w("CommentAdapter", "Error checking votes", task.exception)
+                        }
+                    }
+            }
         }
 
         holder.btnCmntDownvote.setOnClickListener {
-            // Increment downvote count locally
-            comment.downvotes++
-            // Update the UI
-            holder.CmntdownvotesTextView.text = comment.downvotes.toString()
-            // Update downvote count on Firestore
-            updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
-
-            notifyDataSetChanged()
+            val userId = auth.currentUser?.uid
+            if (userId != null) {
+                firestore.collection("votes")
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("commentId", comment.commentId)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val documents = task.result?.documents
+                            val document = if (!documents.isNullOrEmpty()) {
+                                documents[0]
+                            } else {
+                                null
+                            }
+                            if (document != null) {
+                                val voteType = document.getString("voteType")
+                                if (voteType == "upvote") {
+                                    comment.upvotes--
+                                    comment.downvotes++
+                                    holder.CmntupvotesTextView.text = comment.upvotes.toString()
+                                    holder.CmntdownvotesTextView.text = comment.downvotes.toString()
+                                    updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
+                                    updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
+                                    document.reference.update("voteType", "downvote")
+                                } else if (voteType == "downvote") {
+                                    comment.downvotes--
+                                    holder.CmntdownvotesTextView.text = comment.downvotes.toString()
+                                    updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
+                                    document.reference.delete()
+                                }
+                            } else {
+                                comment.downvotes++
+                                holder.CmntdownvotesTextView.text = comment.downvotes.toString()
+                                updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
+                                val voteId = UUID.randomUUID().toString()
+                                val vote = mapOf("userId" to userId, "commentId" to comment.commentId, "voteType" to "downvote")
+                                firestore.collection("votes").document(voteId).set(vote)
+                            }
+                        } else {
+                            Log.w("CommentAdapter", "Error checking votes", task.exception)
+                        }
+                    }
+            }
         }
 
     }
@@ -68,12 +143,18 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
             .whereEqualTo("postId", postId)
             .get()
             .addOnSuccessListener { result ->
+                val oldSize = comments.size
                 comments.clear()
                 for (document in result) {
                     val comment = document.toObject(CommentData::class.java)
                     comments.add(comment)
                 }
-                notifyDataSetChanged()
+                val newSize = comments.size
+                if (newSize > oldSize) {
+                    notifyItemInserted(newSize - 1)
+                } else if (newSize < oldSize) {
+                    notifyItemRemoved(oldSize - 1)
+                }
             }
             .addOnFailureListener { exception ->
                 Log.w("CommentAdapter", "Error getting comments for post $postId", exception)
@@ -84,18 +165,16 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
         return comments.size
     }
 
-    private fun updateVoteCountOnFirestore(commentID: String, voteType: String, newCount: Int) {
+    private fun updateVoteCountOnFirestore(commentId: String, voteType: String, newCount: Int) {
         val db = FirebaseFirestore.getInstance()
-        val postRef = db.collection("comments").document(commentID)
+        val commentRef = db.collection("comments").document(commentId)
 
-        // Update the upvote or downvote count in Firestore
-        postRef.update(voteType, newCount)
+        commentRef.update(voteType, newCount)
             .addOnSuccessListener {
-                Log.d("CommentAdapter", "updating vote count on Firestore for post $commentID")
-                // Successfully updated vote count on Firestore
+                Log.d("CommentAdapter", "updating vote count on Firestore for comment $commentId")
             }
             .addOnFailureListener { exception ->
-                Log.w("CommentAdapter", "Error updating vote count on Firestore for post $commentID", exception)
+                Log.w("CommentAdapter", "Error updating vote count on Firestore for comment $commentId", exception)
             }
     }
 
