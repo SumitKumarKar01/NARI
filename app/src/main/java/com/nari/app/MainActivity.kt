@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import com.applandeo.materialcalendarview.CalendarDay
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.applandeo.materialcalendarview.CalendarView
-import com.applandeo.materialcalendarview.EventDay
+
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -102,11 +104,16 @@ class MainActivity : AppCompatActivity() {
             currentDate.add(Calendar.DATE, 1)
         }
 
-        // Create a list of EventDay objects to represent the range
-        val events = datesInRange.map { EventDay(it, R.drawable.ic_selected_day) }
 
-        // Set the selected dates in the CalendarView
-        calendarView.setEvents(events)
+
+        val calendarDayList = datesInRange.map{
+            CalendarDay(it).apply{
+                imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day)
+
+
+            }
+        }
+        calendarView.setCalendarDays(calendarDayList)
     }
 
 

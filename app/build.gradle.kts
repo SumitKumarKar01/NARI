@@ -88,7 +88,7 @@ dependencies {
 
 
     //Calendar View
-    implementation ("com.applandeo:material-calendar-view:1.9.0-rc03")
+    implementation ("com.applandeo:material-calendar-view:1.9.0")
 
 
 
