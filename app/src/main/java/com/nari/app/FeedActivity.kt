@@ -29,6 +29,9 @@ class FeedActivity : AppCompatActivity() {
     private lateinit var postAdapter: PostAdapter
     private val posts: MutableList<PostData> = mutableListOf()
 
+    private var lastVisible: DocumentSnapshot? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +50,9 @@ class FeedActivity : AppCompatActivity() {
         recyclerView.adapter = postAdapter
 
         // Fetch posts from Firestore
-        fetchPostsFromFirestore()
+        //fetchPostsFromFirestore()
+        loadInitialPosts()
+        listenForNewPosts()
 
         // Initialize UI elements
         editTextPost = findViewById(R.id.editTextPost)
@@ -90,6 +95,17 @@ class FeedActivity : AppCompatActivity() {
             }
         }
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                // 4. When the user scrolls to the last item, load the next 5 posts starting after the last visible post.
+                if (!recyclerView.canScrollVertically(1)) {
+                    loadMorePosts()
+                }
+            }
+        })
+
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.info)
 
         bottomNavigationView.selectedItemId  = R.id.page_2
@@ -116,6 +132,8 @@ class FeedActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun addPostToFirestore(postData: PostData) {
         // Add the post to the "posts" collection in Firestore
         db.collection("posts")
@@ -132,10 +150,49 @@ class FeedActivity : AppCompatActivity() {
             }
     }
 
-
-    private fun fetchPostsFromFirestore() {
+    private fun loadInitialPosts() {
         db.collection("posts")
-            .orderBy("timestamp", Query.Direction.ASCENDING)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .limit(10)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    lastVisible = documents.documents[documents.size() - 1]
+                    for (document in documents) {
+                        val post = document.toObject(PostData::class.java)
+                        posts.add(post)
+                    }
+                    postAdapter.notifyDataSetChanged()
+                }
+            }
+    }
+
+    private fun loadMorePosts() {
+        if (lastVisible != null) {
+            db.collection("posts")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .startAfter(lastVisible!!)
+                .limit(5)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (!documents.isEmpty) {
+                        lastVisible = documents.documents[documents.size() - 1]
+                        for (document in documents) {
+                            val post = document.toObject(PostData::class.java)
+                            posts.add(post)
+                        }
+                        postAdapter.notifyDataSetChanged()
+                    }
+                }
+        }
+    }
+
+    private fun listenForNewPosts() {
+        val currentTime = com.google.firebase.Timestamp.now()
+
+        db.collection("posts")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .whereGreaterThan("timestamp", currentTime)
             .addSnapshotListener { snapshots, error ->
                 if (error != null) {
                     Log.w("FeedActivity", "listen:error", error)
@@ -143,30 +200,50 @@ class FeedActivity : AppCompatActivity() {
                 }
 
                 for (dc in snapshots!!.documentChanges) {
-                    val post = dc.document.toObject(PostData::class.java)
-                    when (dc.type) {
-                        DocumentChange.Type.ADDED -> {
-                            posts.add(0, post) // Add the new post at the beginning of the list
-                            postAdapter.notifyItemInserted(0)
-                        }
-                        DocumentChange.Type.MODIFIED -> {
-                            val index = posts.indexOfFirst { it.postId == post.postId }
-                            if (index != -1) {
-                                posts[index] = post
-                                postAdapter.notifyItemChanged(index)
-                            }
-                        }
-                        DocumentChange.Type.REMOVED -> {
-                            val index = posts.indexOfFirst { it.postId == post.postId }
-                            if (index != -1) {
-                                posts.removeAt(index)
-                                postAdapter.notifyItemRemoved(index)
-                            }
-                        }
+                    if (dc.type == DocumentChange.Type.ADDED) {
+                        val post = dc.document.toObject(PostData::class.java)
+                        posts.add(0, post)
+                        postAdapter.notifyItemInserted(0)
                     }
                 }
             }
     }
+
+
+//    private fun fetchPostsFromFirestore() {
+//        db.collection("posts")
+//            .orderBy("timestamp", Query.Direction.ASCENDING)
+//            .addSnapshotListener { snapshots, error ->
+//                if (error != null) {
+//                    Log.w("FeedActivity", "listen:error", error)
+//                    return@addSnapshotListener
+//                }
+//
+//                for (dc in snapshots!!.documentChanges) {
+//                    val post = dc.document.toObject(PostData::class.java)
+//                    when (dc.type) {
+//                        DocumentChange.Type.ADDED -> {
+//                            posts.add(0, post) // Add the new post at the beginning of the list
+//                            postAdapter.notifyItemInserted(0)
+//                        }
+//                        DocumentChange.Type.MODIFIED -> {
+//                            val index = posts.indexOfFirst { it.postId == post.postId }
+//                            if (index != -1) {
+//                                posts[index] = post
+//                                postAdapter.notifyItemChanged(index)
+//                            }
+//                        }
+//                        DocumentChange.Type.REMOVED -> {
+//                            val index = posts.indexOfFirst { it.postId == post.postId }
+//                            if (index != -1) {
+//                                posts.removeAt(index)
+//                                postAdapter.notifyItemRemoved(index)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//    }
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
