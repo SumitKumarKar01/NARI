@@ -210,40 +210,6 @@ class FeedActivity : AppCompatActivity() {
     }
 
 
-//    private fun fetchPostsFromFirestore() {
-//        db.collection("posts")
-//            .orderBy("timestamp", Query.Direction.ASCENDING)
-//            .addSnapshotListener { snapshots, error ->
-//                if (error != null) {
-//                    Log.w("FeedActivity", "listen:error", error)
-//                    return@addSnapshotListener
-//                }
-//
-//                for (dc in snapshots!!.documentChanges) {
-//                    val post = dc.document.toObject(PostData::class.java)
-//                    when (dc.type) {
-//                        DocumentChange.Type.ADDED -> {
-//                            posts.add(0, post) // Add the new post at the beginning of the list
-//                            postAdapter.notifyItemInserted(0)
-//                        }
-//                        DocumentChange.Type.MODIFIED -> {
-//                            val index = posts.indexOfFirst { it.postId == post.postId }
-//                            if (index != -1) {
-//                                posts[index] = post
-//                                postAdapter.notifyItemChanged(index)
-//                            }
-//                        }
-//                        DocumentChange.Type.REMOVED -> {
-//                            val index = posts.indexOfFirst { it.postId == post.postId }
-//                            if (index != -1) {
-//                                posts.removeAt(index)
-//                                postAdapter.notifyItemRemoved(index)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//    }
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
