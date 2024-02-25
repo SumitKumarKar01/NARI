@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layout_margin="10dp"
+    android:background="@drawable/post_background">
 
     <!-- Post Content -->
     <com.google.android.material.textview.MaterialTextView
@@ -21,49 +23,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/textPostContent">
+        android:layout_below="@id/textPostContent"
+        >
 
         <!-- Upvote Button -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
 
             <ImageButton
                 android:id="@+id/btnUpvote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
+                android:contentDescription="@string/like"
                 android:focusable="true"
                 android:padding="16dp"
-                android:src="@drawable/ic_upvote_icon"
-                android:contentDescription="@string/like"/>
+                android:src="@drawable/ic_upvote_icon" />
 
             <TextView
                 android:id="@+id/tvUpvoteCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/btnUpvote"
-                android:layout_centerVertical="true"
                 android:text="@string/sampleLikeCount"
                 android:textSize="18sp"
                 android:layout_marginStart="10dp"
-                android:layout_centerHorizontal="true"/>
-        </RelativeLayout>
+                />
+        </LinearLayout>
 
         <!-- Downvote Button -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <ImageButton
                 android:id="@+id/btnDownvote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:background="?attr/selectableItemBackground"
                 android:padding="16dp"
                 android:src="@drawable/ic_downvote_icon"
@@ -75,26 +79,23 @@
                 android:id="@+id/tvDownvoteCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/btnDownvote"
-                android:layout_centerVertical="true"
                 android:text="@string/sampleDislikeCount"
                 android:textSize="18sp"
-                android:layout_marginStart="10dp"
-                android:layout_centerHorizontal="true"/>
-        </RelativeLayout>
+                android:layout_marginStart="10dp"/>
+        </LinearLayout>
 
         <!-- Comment Button -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <ImageButton
                 android:id="@+id/btnComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
                 android:background="?attr/selectableItemBackground"
                 android:padding="16dp"
                 android:src="@drawable/ic_comment_icon"
@@ -106,13 +107,10 @@
                 android:id="@+id/tvCommentCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/btnComment"
-                android:layout_centerVertical="true"
                 android:text="@string/sampleCommentCount"
                 android:textSize="18sp"
-                android:layout_marginStart="10dp"
-                android:layout_centerHorizontal="true"/>
-        </RelativeLayout>
+                android:layout_marginStart="10dp"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Commenting Box -->
@@ -149,7 +147,7 @@
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_check_mark"
-            android:background="?android:colorBackground"
+            android:background="?attr/colorOnSurfaceInverse"
             android:text="@string/post"
             android:clickable="true"
             android:focusable="true"
