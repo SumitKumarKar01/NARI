@@ -59,20 +59,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-        // Create an instance of DataUpdater and call updateDataFromJson
-        val dataUpdater = JsonDatabaseSync(this)
-        dataUpdater.updateDataFromJson()
-
-        // Retrieve and log data from the database
-        val itemRepository = ItemRepository(this)
-        val itemList = itemRepository.getAllItems()
-
-        // Log the items to the console
-        for (item in itemList) {
-            Log.d("DatabaseLog", "ID: ${item.id}, Title: ${item.title}, Description: ${item.description}, Image: ${item.image}, Category: ${item.category}")
-        }
-
         //Calendar
         calendar()
         val predictedDates = predictNextPeriod()

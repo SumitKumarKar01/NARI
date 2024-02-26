@@ -4,6 +4,7 @@ package com.nari.app
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -43,7 +44,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     fun wipeDatabase() {
         val db = writableDatabase
         db.execSQL("DELETE FROM $TABLE_NAME")
-//        Log.d("DatabaseLogger", "cleared")
+        Log.d("DatabaseLogger", "cleared")
         db.close()
     }
 }

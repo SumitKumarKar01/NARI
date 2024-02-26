@@ -84,7 +84,6 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
 //    implementation ("com.firebaseui:firebase-ui-auth:latest.release")
 
-    implementation ("com.facebook.android:facebook-login:16.3.0")
 
 
     //Calendar View
