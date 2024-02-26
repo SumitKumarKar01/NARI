@@ -42,10 +42,15 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
         holder.CmntupvotesTextView.text = comment.upvotes.toString()
         holder.CmntdownvotesTextView.text = comment.downvotes.toString()
 
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            updateVoteDrawables(comment.commentId, userId, holder)
+        }
+
         holder.btnCmntUpvote.setOnClickListener {
             val userId = auth.currentUser?.uid
             if (userId != null) {
-                firestore.collection("votes")
+                firestore.collection("CmntVotes")
                     .whereEqualTo("userId", userId)
                     .whereEqualTo("commentId", comment.commentId)
                     .get()
@@ -79,11 +84,12 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
                                 updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
                                 val voteId = UUID.randomUUID().toString()
                                 val vote = mapOf("userId" to userId, "commentId" to comment.commentId, "voteType" to "upvote")
-                                firestore.collection("votes").document(voteId).set(vote)
+                                firestore.collection("CmntVotes").document(voteId).set(vote)
                             }
                         } else {
                             Log.w("CommentAdapter", "Error checking votes", task.exception)
                         }
+                        updateVoteDrawables(comment.commentId, userId, holder)
                     }
             }
         }
@@ -91,7 +97,7 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
         holder.btnCmntDownvote.setOnClickListener {
             val userId = auth.currentUser?.uid
             if (userId != null) {
-                firestore.collection("votes")
+                firestore.collection("CmntVotes")
                     .whereEqualTo("userId", userId)
                     .whereEqualTo("commentId", comment.commentId)
                     .get()
@@ -125,11 +131,12 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
                                 updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
                                 val voteId = UUID.randomUUID().toString()
                                 val vote = mapOf("userId" to userId, "commentId" to comment.commentId, "voteType" to "downvote")
-                                firestore.collection("votes").document(voteId).set(vote)
+                                firestore.collection("CmntVotes").document(voteId).set(vote)
                             }
                         } else {
                             Log.w("CommentAdapter", "Error checking votes", task.exception)
                         }
+                        updateVoteDrawables(comment.commentId, userId, holder)
                     }
             }
         }
@@ -186,6 +193,38 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
             }
             .addOnFailureListener { exception ->
                 Log.w("CommentAdapter", "Error updating vote count on Firestore for comment $commentId", exception)
+            }
+    }
+
+    private fun updateVoteDrawables(commentId: String, userId: String, holder: ViewHolder) {
+        firestore.collection("CmntVotes")
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("commentId", commentId)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val documents = task.result?.documents
+                    val document = if (!documents.isNullOrEmpty()) {
+                        documents[0]
+                    } else {
+                        null
+                    }
+                    if (document != null) {
+                        val voteType = document.getString("voteType")
+                        if (voteType == "upvote") {
+                            holder.btnCmntUpvote.setImageResource(R.drawable.ic_upvote_icon)
+                            holder.btnCmntDownvote.setImageResource(R.drawable.ic_downvote_icon_unselect)
+                        } else if (voteType == "downvote") {
+                            holder.btnCmntDownvote.setImageResource(R.drawable.ic_downvote_icon)
+                            holder.btnCmntUpvote.setImageResource(R.drawable.ic_upvote_icon_unselect)
+                        }
+                    } else {
+                        holder.btnCmntUpvote.setImageResource(R.drawable.ic_upvote_icon_unselect)
+                        holder.btnCmntDownvote.setImageResource(R.drawable.ic_downvote_icon_unselect)
+                    }
+                } else {
+                    Log.w("CommentAdapter", "Error checking votes", task.exception)
+                }
             }
     }
 

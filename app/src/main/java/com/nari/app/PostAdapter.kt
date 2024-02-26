@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.UUID
+import android.os.Handler
+import android.os.Looper
 
 class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     private lateinit var firestore: FirebaseFirestore
@@ -32,6 +34,13 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         holder.tvDownvoteCount.text = post.downvotes.toString()
         holder.tvCommentCount.text = post.comments.toString()
 
+        val userId = auth.currentUser?.uid
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            if (userId != null) {
+                updateVoteDrawables(post.postId, userId, holder)
+            }
+        }, 1000) // Delay of 1 second
 
 
 
@@ -92,7 +101,7 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         holder.btnUpvote.setOnClickListener {
             val userId = auth.currentUser?.uid
             if (userId != null) {
-                firestore.collection("votes")
+                firestore.collection("postVotes")
                     .whereEqualTo("userId", userId)
                     .whereEqualTo("postId", post.postId)
                     .get()
@@ -131,11 +140,12 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                                 updateVoteCountOnFirestore(post.postId, "upvotes", post.upvotes)
                                 val voteId = UUID.randomUUID().toString()
                                 val vote = mapOf("userId" to userId, "postId" to post.postId, "voteType" to "upvote")
-                                firestore.collection("votes").document(voteId).set(vote)
+                                firestore.collection("postVotes").document(voteId).set(vote)
                             }
                         } else {
                             Log.w("PostAdapter", "Error checking votes", task.exception)
                         }
+                        updateVoteDrawables(post.postId, userId, holder)
                     }
             }
         }
@@ -143,7 +153,7 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         holder.btnDownvote.setOnClickListener {
             val userId = auth.currentUser?.uid
             if (userId != null) {
-                firestore.collection("votes")
+                firestore.collection("postVotes")
                     .whereEqualTo("userId", userId)
                     .whereEqualTo("postId", post.postId)
                     .get()
@@ -182,11 +192,12 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                                 updateVoteCountOnFirestore(post.postId, "downvotes", post.downvotes)
                                 val voteId = UUID.randomUUID().toString()
                                 val vote = mapOf("userId" to userId, "postId" to post.postId, "voteType" to "downvote")
-                                firestore.collection("votes").document(voteId).set(vote)
+                                firestore.collection("postVotes").document(voteId).set(vote)
                             }
                         } else {
                             Log.w("PostAdapter", "Error checking votes", task.exception)
                         }
+                        updateVoteDrawables(post.postId, userId, holder)
                     }
             }
         }
@@ -227,6 +238,38 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
             .addOnFailureListener { exception ->
                 Log.w("PostAdapter", "Error adding comment to Firestore", exception)
             }
+    }
+
+    private fun updateVoteDrawables(postId: String, userId: String, holder: ViewHolder) {
+    firestore.collection("postVotes")
+        .whereEqualTo("userId", userId)
+        .whereEqualTo("postId", postId)
+        .get()
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val documents = task.result?.documents
+                val document = if (!documents.isNullOrEmpty()) {
+                    documents[0]
+                } else {
+                    null
+                }
+                if (document != null) {
+                    val voteType = document.getString("voteType")
+                    if (voteType == "upvote") {
+                        holder.btnUpvote.setImageResource(R.drawable.ic_upvote_icon)
+                        holder.btnDownvote.setImageResource(R.drawable.ic_downvote_icon_unselect)
+                    } else if (voteType == "downvote") {
+                        holder.btnDownvote.setImageResource(R.drawable.ic_downvote_icon)
+                        holder.btnUpvote.setImageResource(R.drawable.ic_upvote_icon_unselect)
+                    }
+                } else {
+                    holder.btnUpvote.setImageResource(R.drawable.ic_upvote_icon_unselect)
+                    holder.btnDownvote.setImageResource(R.drawable.ic_downvote_icon_unselect)
+                }
+            } else {
+                Log.w("PostAdapter", "Error checking votes", task.exception)
+            }
+        }
     }
 
 
