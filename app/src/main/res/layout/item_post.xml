@@ -98,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
                 android:padding="16dp"
-                android:src="@drawable/ic_comment_icon"
+                android:src="@drawable/ic_comment_icon_unselect"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="@string/comment"/>

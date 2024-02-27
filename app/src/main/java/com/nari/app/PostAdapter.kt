@@ -46,6 +46,8 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         holder.commentsRecyclerView.layoutManager = LinearLayoutManager(holder.itemView.context)
         holder.commentsRecyclerView.adapter = commentAdapter
 
+        updateCommentDrawable(post.postId, holder)
+
 
         // Toggle comments visibility
         // Toggle comments visibility
@@ -78,7 +80,7 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
 
                     // Save the new comment to Firestore
 
-                    saveCommentToFirestore(newComment)
+                    saveCommentToFirestore(newComment,holder)
                     post.comments++
                     holder.tvCommentCount.text = post.comments.toString()
                     updateVoteCountOnFirestore(post.postId, "comments", post.comments)
@@ -87,7 +89,9 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                 // Clear the comment input field
                 holder.editComment.text.clear()
 
+
                 //holder.commentsRecyclerView.visibility = View.VISIBLE
+
 
 
 
@@ -218,7 +222,7 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                 Log.w("PostAdapter", "Error updating vote count on Firestore for post $postId", exception)
             }
     }
-    private fun saveCommentToFirestore(commentData: CommentData) {
+    private fun saveCommentToFirestore(commentData: CommentData, holder: ViewHolder) {
         val db = FirebaseFirestore.getInstance()
         db.collection("comments")
             .document(commentData.commentId)
@@ -228,6 +232,8 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
                 // Notify the adapter that an item has been inserted
                 //notifyItemInserted(posts.size - 1)
                 notifyDataSetChanged()
+
+                updateCommentDrawable(commentData.postId, holder)
             }
             .addOnFailureListener { exception ->
                 Log.w("PostAdapter", "Error adding comment to Firestore", exception)
@@ -266,7 +272,25 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         }
     }
 
-
+    private fun updateCommentDrawable(postId: String, holder: ViewHolder) {
+        firestore.collection("comments")
+            .whereEqualTo("postId", postId)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val documents = task.result?.documents
+                    if (!documents.isNullOrEmpty()) {
+                        // If there are comments, set the comment button to a specific drawable
+                        holder.btnComment.setImageResource(R.drawable.ic_comment_icon)
+                    } else {
+                        // If there are no comments, set the comment button to a different drawable
+                        holder.btnComment.setImageResource(R.drawable.ic_comment_icon_unselect)
+                    }
+                } else {
+                    Log.w("PostAdapter", "Error checking comments", task.exception)
+                }
+            }
+    }
 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
