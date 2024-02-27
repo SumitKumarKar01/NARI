@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,8 @@ class FeedActivity : AppCompatActivity() {
     private val posts: MutableList<PostData> = mutableListOf()
 
     private var lastVisible: DocumentSnapshot? = null
+
+    private var isLoading = false
 
 
 
@@ -57,6 +60,14 @@ class FeedActivity : AppCompatActivity() {
         // Initialize UI elements
         editTextPost = findViewById(R.id.editTextPost)
         buttonSubmit = findViewById(R.id.buttonSubmit)
+
+        val scrollView = findViewById<ScrollView>(R.id.scroll_view)
+
+        scrollView.viewTreeObserver.addOnScrollChangedListener {
+            if (!scrollView.canScrollVertically(1) && !isLoading) {
+                loadMorePosts()
+            }
+        }
 
 
 
@@ -95,16 +106,6 @@ class FeedActivity : AppCompatActivity() {
             }
         }
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                // 4. When the user scrolls to the last item, load the next 5 posts starting after the last visible post.
-                if (!recyclerView.canScrollVertically(1)) {
-                    loadMorePosts()
-                }
-            }
-        })
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.info)
 
@@ -164,11 +165,15 @@ class FeedActivity : AppCompatActivity() {
                     }
                     postAdapter.notifyDataSetChanged()
                 }
+                Log.d("FeedActivity", "First 10 posts loaded")
             }
     }
 
+
+
     private fun loadMorePosts() {
-        if (lastVisible != null) {
+        if (!isLoading && lastVisible != null) {
+            isLoading = true
             db.collection("posts")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .startAfter(lastVisible!!)
@@ -183,6 +188,11 @@ class FeedActivity : AppCompatActivity() {
                         }
                         postAdapter.notifyDataSetChanged()
                     }
+                    isLoading = false
+                    Log.d("FeedActivity", "Next 5 posts loaded")
+                }
+                .addOnFailureListener {
+                    isLoading = false
                 }
         }
     }

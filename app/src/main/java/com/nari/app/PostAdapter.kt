@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.UUID
-import android.os.Handler
-import android.os.Looper
+
 
 class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
-    private lateinit var firestore: FirebaseFirestore
-    private lateinit var auth: FirebaseAuth
+    private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val userId = auth.currentUser?.uid
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
@@ -26,21 +27,17 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = posts[position]
-        auth = FirebaseAuth.getInstance()
-        firestore = FirebaseFirestore.getInstance()
+
 
         holder.postContent.text = post.content
         holder.tvUpvoteCount.text = post.upvotes.toString()
         holder.tvDownvoteCount.text = post.downvotes.toString()
         holder.tvCommentCount.text = post.comments.toString()
 
-        val userId = auth.currentUser?.uid
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({
-            if (userId != null) {
-                updateVoteDrawables(post.postId, userId, holder)
-            }
-        }, 1000) // Delay of 1 second
+
+        if (userId != null) {
+            updateVoteDrawables(post.postId, userId, holder)
+        }
 
 
 
@@ -63,7 +60,6 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         holder.btnPostComment.setOnClickListener {
             val commentContent = holder.editComment.text.toString()
             if (commentContent.isNotEmpty()) {
-                val userId = auth.currentUser?.uid
                 if (userId != null) {
                     // Generate a unique comment ID
                     val commentId = UUID.randomUUID().toString()
@@ -99,7 +95,6 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         }
 
         holder.btnUpvote.setOnClickListener {
-            val userId = auth.currentUser?.uid
             if (userId != null) {
                 firestore.collection("postVotes")
                     .whereEqualTo("userId", userId)
@@ -151,7 +146,6 @@ class PostAdapter(private val posts: List<PostData>) : RecyclerView.Adapter<Post
         }
 
         holder.btnDownvote.setOnClickListener {
-            val userId = auth.currentUser?.uid
             if (userId != null) {
                 firestore.collection("postVotes")
                     .whereEqualTo("userId", userId)

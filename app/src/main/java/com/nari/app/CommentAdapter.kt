@@ -16,6 +16,7 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
     private val comments: MutableList<CommentData> = mutableListOf()
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val userId = auth.currentUser?.uid
 
 
     init {
@@ -42,13 +43,12 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
         holder.CmntupvotesTextView.text = comment.upvotes.toString()
         holder.CmntdownvotesTextView.text = comment.downvotes.toString()
 
-        val userId = auth.currentUser?.uid
         if (userId != null) {
             updateVoteDrawables(comment.commentId, userId, holder)
         }
 
         holder.btnCmntUpvote.setOnClickListener {
-            val userId = auth.currentUser?.uid
+
             if (userId != null) {
                 firestore.collection("CmntVotes")
                     .whereEqualTo("userId", userId)
@@ -95,7 +95,6 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
         }
 
         holder.btnCmntDownvote.setOnClickListener {
-            val userId = auth.currentUser?.uid
             if (userId != null) {
                 firestore.collection("CmntVotes")
                     .whereEqualTo("userId", userId)
