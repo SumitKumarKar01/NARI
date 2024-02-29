@@ -143,10 +143,11 @@
         <!-- Comment Button -->
         <ImageButton
             android:id="@+id/btnPostComment"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="18dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_check_mark"
+            android:src="@drawable/ic_send"
             android:background="?attr/colorOnSurfaceInverse"
             android:text="@string/post"
             android:clickable="true"
