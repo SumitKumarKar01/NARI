@@ -10,7 +10,7 @@
         android:id="@+id/selectedDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Selected Lase Period Date: "
+        android:text="@string/selectLastPeriodDate"
         android:textSize="24sp"
         android:textColor="?attr/colorPrimary"
         android:layout_gravity="center_horizontal"
@@ -30,9 +30,8 @@
         android:id="@+id/confirmButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm"
+        android:text="@string/confirm"
         android:layout_gravity="center_horizontal"
-        android:onClick="confirmDate"
         android:layout_marginVertical="16sp"/>
 
 </LinearLayout>

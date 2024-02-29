@@ -29,5 +29,7 @@
     <string name="sampleCommentCount">20</string>
     <string name="samplePostContent">This is a sample post content.</string>
     <string name="sampleCommentContent">This is a sample comment content.</string>
+    <string name="selectLastPeriodDate">Select Last Period Date: </string>
+    <string name="selectedDate">Selected Date: %1$s</string>
 
 </resources>

@@ -25,16 +25,16 @@ class DatePickerActivity : AppCompatActivity() {
         selectedDateTextView = findViewById(R.id.selectedDateTextView)
         datePicker = findViewById(R.id.datePicker)
         confirmButton = findViewById(R.id.confirmButton)
-    }
 
-    fun confirmDate(view: View) {
-        // Save selected date to SharedPreferences
-        saveSelectedDateToSharedPreferences()
+        confirmButton.setOnClickListener {
+            // Save selected date to SharedPreferences
+            saveSelectedDateToSharedPreferences()
 
-        // Hide DatePicker
-        datePicker.visibility = View.INVISIBLE
-        startActivity(Intent(this,MainActivity::class.java))
-        finish()
+            // Hide DatePicker
+            datePicker.visibility = View.INVISIBLE
+            startActivity(Intent(this,MainActivity::class.java))
+            finish()
+        }
     }
 
     private fun saveSelectedDateToSharedPreferences() {
@@ -44,8 +44,8 @@ class DatePickerActivity : AppCompatActivity() {
         editor.putString("selectedDate", selectedDate)
         Log.d("DatePickerActivity", "Selected date: $selectedDate")
         editor.apply()
+        selectedDateTextView.text = getString(R.string.selectedDate, selectedDate)
 
-        updateSelectedDateTextView(selectedDate)
     }
 
     private fun getSelectedDateFromDatePicker(): String {
@@ -60,7 +60,4 @@ class DatePickerActivity : AppCompatActivity() {
         return sdf.format(calendar.time)
     }
 
-    private fun updateSelectedDateTextView(selectedDate: String) {
-        selectedDateTextView.text = "Selected Date: $selectedDate"
-    }
 }
