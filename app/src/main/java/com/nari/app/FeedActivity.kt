@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +35,8 @@ class FeedActivity : AppCompatActivity() {
 
     private var isLoading = false
 
+    private lateinit var progressBar: ProgressBar
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +46,8 @@ class FeedActivity : AppCompatActivity() {
         // Initialize Firebase
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+
+        progressBar = findViewById(R.id.progressBar)
 
         // Initialize UI elements
         recyclerView = findViewById(R.id.item_post)
@@ -60,6 +65,7 @@ class FeedActivity : AppCompatActivity() {
         // Initialize UI elements
         editTextPost = findViewById(R.id.editTextPost)
         buttonSubmit = findViewById(R.id.buttonSubmit)
+
 
         val scrollView = findViewById<ScrollView>(R.id.scroll_view)
 
@@ -152,11 +158,13 @@ class FeedActivity : AppCompatActivity() {
     }
 
     private fun loadInitialPosts() {
+        progressBar.visibility = ProgressBar.VISIBLE
         db.collection("posts")
             .orderBy("timestamp", Query.Direction.DESCENDING)
             .limit(10)
             .get()
             .addOnSuccessListener { documents ->
+                progressBar.visibility = ProgressBar.GONE
                 if (!documents.isEmpty) {
                     lastVisible = documents.documents[documents.size() - 1]
                     for (document in documents) {
@@ -167,19 +175,26 @@ class FeedActivity : AppCompatActivity() {
                 }
                 Log.d("FeedActivity", "First 10 posts loaded")
             }
+            .addOnFailureListener {
+                progressBar.visibility = ProgressBar.GONE
+            }
+
     }
 
 
 
     private fun loadMorePosts() {
+        progressBar.visibility = ProgressBar.VISIBLE
         if (!isLoading && lastVisible != null) {
             isLoading = true
+
             db.collection("posts")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .startAfter(lastVisible!!)
-                .limit(5)
+                .limit(10)
                 .get()
                 .addOnSuccessListener { documents ->
+                    progressBar.visibility = ProgressBar.GONE
                     if (!documents.isEmpty) {
                         lastVisible = documents.documents[documents.size() - 1]
                         for (document in documents) {
@@ -189,9 +204,10 @@ class FeedActivity : AppCompatActivity() {
                         postAdapter.notifyDataSetChanged()
                     }
                     isLoading = false
-                    Log.d("FeedActivity", "Next 5 posts loaded")
+                    Log.d("FeedActivity", "Next 10 posts loaded")
                 }
                 .addOnFailureListener {
+                    progressBar.visibility = ProgressBar.GONE
                     isLoading = false
                 }
         }

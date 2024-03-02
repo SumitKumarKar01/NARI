@@ -10,6 +10,19 @@
     tools:context=".FeedActivity"
     >
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        app:showAnimationBehavior="inward"
+        app:hideAnimationBehavior="inward"
+        app:trackThickness="4dp"
+        android:layout_centerHorizontal="true"/>
+
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -54,8 +67,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/buttonSubmit"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 />
         </RelativeLayout>
     </ScrollView>
