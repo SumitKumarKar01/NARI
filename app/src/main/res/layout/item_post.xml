@@ -147,7 +147,7 @@
             android:layout_height="wrap_content"
             android:padding="18dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_send"
+            android:src="@drawable/ic_send_selector"
             android:background="?attr/colorOnSurfaceInverse"
             android:text="@string/post"
             android:clickable="true"
