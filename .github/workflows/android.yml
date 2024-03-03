@@ -34,5 +34,37 @@ jobs:
     - name: Upload Release APK
       uses: actions/upload-artifact@v4
       with:
-          name: release-apk
+          name: nari-alpha
           path: app/build/outputs/apk/release/*.apk
+          
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download APK artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: nari-alpha
+        path: ${{ github.workspace }}/build
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: alpha
+        release_name: Alpha Release
+        draft: false
+        prerelease: true
+
+    - name: Upload APK to Release
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build/*.apk
+        asset_name: nari-alpha.apk
+        asset_content_type: application/vnd.android.package-archive
