@@ -27,6 +27,7 @@
     <string name="sampleLikeCount">10</string>
     <string name="sampleDislikeCount">5</string>
     <string name="sampleCommentCount">20</string>
+    <string name="sampleText">This is a sample Text. This is a sample Text.</string>
     <string name="samplePostContent">This is a sample post content.</string>
     <string name="sampleCommentContent">This is a sample comment content.</string>
     <string name="selectLastPeriodDate">Select Last Period Date: </string>
