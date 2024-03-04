@@ -13,7 +13,7 @@ class JsonDatabaseSync(private val context: Context) {
     }
 
     private fun readJsonFile(): String {
-        val inputStream = context.resources.openRawResource(R.raw.sample_data)
+        val inputStream = context.resources.openRawResource(R.raw.data)
         val reader = BufferedReader(InputStreamReader(inputStream))
         val stringBuilder = StringBuilder()
         var line: String? = reader.readLine()
