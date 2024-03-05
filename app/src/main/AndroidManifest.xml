@@ -15,6 +15,15 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".Hospitals"
+            android:exported="false" />
+        <activity
+            android:name=".PreviousMenstruation"
+            android:exported="false" />
+        <activity
+            android:name=".CalendarLog"
+            android:exported="false" />
+        <activity
             android:name=".DatePickerActivity"
             android:exported="false" />
         <activity

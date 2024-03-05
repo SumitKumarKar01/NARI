@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.applandeo.materialcalendarview.CalendarDay
@@ -20,6 +21,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+
 
     // Shared Preferences
     private val sharedPreferences: SharedPreferences by lazy {
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 setContentView(R.layout.activity_main)
+                calendarButtonNavigation()
                 navigation()
             }
         }
@@ -162,6 +165,34 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun calendarButtonNavigation(){
+        val calendarLog: RelativeLayout = findViewById(R.id.calendarLog)
+        val calendarPreviousMenstruatuion: RelativeLayout = findViewById(R.id.calendarPreviousMenstruation)
+        val calendarSwitchMode: RelativeLayout = findViewById(R.id.calendarSwitchMode)
+        val calendarHospitals: RelativeLayout = findViewById(R.id.calendarHospitals)
+
+        calendarLog.setOnClickListener {
+            val intent = Intent(this,CalendarLog::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        calendarPreviousMenstruatuion.setOnClickListener {
+            val intent = Intent(this,PreviousMenstruation::class.java)
+            startActivity(intent)
+            finish()
+        }
+        calendarSwitchMode.setOnClickListener {
+            switchCalendarModes()
+        }
+        calendarHospitals.setOnClickListener {
+            val intent = Intent(this,Hospitals::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+    }
+
 
 
     override fun onStart() {
@@ -218,6 +249,9 @@ class MainActivity : AppCompatActivity() {
         val nextEndDate = calendar.time
 
         return Pair(nextStartDate, nextEndDate)
+    }
+    private fun switchCalendarModes(){
+
     }
 
 
