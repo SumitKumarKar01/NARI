@@ -1,175 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/AppTheme"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fillViewport="true">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
 
-    <RelativeLayout
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:context=".DatePickerActivity">
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/topAppBarHolder">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/topAppBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:minHeight="?attr/actionBarSize"
+                    app:menu="@menu/top_navigation_menu" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/calendarTitleHolder"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/topAppBarHolder">
+                <TextView
+                    android:id="@+id/calendarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginVertical="5dp"
+                    android:text="Period/Ovulation Calendar"
+                    android:textSize="24sp"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold"
+                    />
+            </RelativeLayout>
+
+            <com.applandeo.materialcalendarview.CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calendarTitleHolder"
+                android:layout_marginBottom="5dp"
+                app:pagesColor="?attr/colorOnSurfaceInverse"
+                app:daysLabelsColor="?attr/colorOnBackground"
+                app:abbreviationsBarColor="?attr/colorOnSurfaceInverse"
+                app:abbreviationsLabelsColor="?attr/colorOnBackground"
+                app:headerColor="?attr/colorOnSurfaceInverse"
+                app:headerLabelColor="?attr/colorPrimary"
+                app:anotherMonthsDaysLabelsColor="?attr/colorOnSurfaceVariant"
+                app:previousButtonSrc="@drawable/arrow_back"
+                app:forwardButtonSrc="@drawable/arrow_forward"
+                app:todayLabelColor="?attr/colorPrimary"
+                app:highlightedDaysLabelsColor="?attr/colorPrimary"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/calendarDayCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_margin="5dp"
+                android:padding="5dp"
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_below="@+id/calendarView">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorOnSurfaceInverse"
+                    android:textSize="16sp"
+                    android:padding="24dp"
+                    android:text="@string/sampleText"
+
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
+            <GridLayout
+                android:id="@+id/calendarOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/calendarDayCard"
+                android:rowCount="3"
+                android:columnCount="2"
+                android:layout_margin="5dp"
+                android:padding="5dp">
+                <RelativeLayout
+                    android:id="@+id/calendarLog"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/button_background">
+
+                    <ImageButton
+                        android:id="@+id/calendarLogButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_log"
+                        android:layout_centerHorizontal="true"
+                        android:background="?attr/colorOnSurfaceInverse"
+                        android:contentDescription="@string/pregnancy"
+                        />
+                    <TextView
+                        android:id="@+id/calendarLogText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/calendarLogButton"
+                        android:layout_centerHorizontal="true"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Log Symptomps"
+                        android:textSize="16sp"
+                        />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/calendarPreviousMenstruation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/button_background">
+
+                    <ImageButton
+                        android:id="@+id/calendarPreviousMenstruationButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_add_to_calendar"
+                        android:layout_centerHorizontal="true"
+                        android:background="?attr/colorOnSurfaceInverse"
+                        android:contentDescription="@string/pregnancy"
+                        />
+                    <TextView
+                        android:id="@+id/calendarPreviousMenstruationText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/calendarPreviousMenstruationButton"
+                        android:layout_centerHorizontal="true"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Add Period Dates"
+                        android:textSize="16sp"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/calendarSwitchMode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/button_background">
+
+                    <ImageButton
+                        android:id="@+id/calendarSwitchModeButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_switch_modes"
+                        android:layout_centerHorizontal="true"
+                        android:background="?attr/colorOnSurfaceInverse"
+                        android:contentDescription="@string/pregnancy"
+                        />
+                    <TextView
+                        android:id="@+id/calendarSwitchModeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/calendarSwitchModeButton"
+                        android:layout_centerHorizontal="true"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Switch Mode"
+                        android:textSize="16sp"
+                        />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/calendarHospitals"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/button_background">
+
+                    <ImageButton
+                        android:id="@+id/calendarHospitalsButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_nearby_medical"
+                        android:layout_centerHorizontal="true"
+                        android:background="?attr/colorOnSurfaceInverse"
+                        android:contentDescription="@string/pregnancy"
+                        />
+                    <TextView
+                        android:id="@+id/calendarHospitalsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/calendarHospitalsButton"
+                        android:layout_centerHorizontal="true"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Nearby Hospitals"
+                        android:textSize="16sp"
+                        />
+                </RelativeLayout>
+            </GridLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context=".DatePickerActivity">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_alignParentBottom="true"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_navigation_menu" />
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/topAppBarHolder">
+</RelativeLayout>
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="?attr/actionBarSize"
-                app:menu="@menu/top_navigation_menu" />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <com.applandeo.materialcalendarview.CalendarView
-            android:id="@+id/calendarView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/topAppBarHolder"
-            android:layout_marginBottom="5dp"
-            app:pagesColor="?attr/colorOnSurfaceInverse"
-            app:daysLabelsColor="?attr/colorOnBackground"
-            app:abbreviationsBarColor="?attr/colorOnSurfaceInverse"
-            app:abbreviationsLabelsColor="?attr/colorOnBackground"
-            app:headerColor="?attr/colorOnSurfaceInverse"
-            app:headerLabelColor="?attr/colorPrimary"
-            app:anotherMonthsDaysLabelsColor="?attr/colorOnSurfaceVariant"
-            app:previousButtonSrc="@drawable/arrow_back"
-            app:forwardButtonSrc="@drawable/arrow_forward"
-            app:todayLabelColor="?attr/colorPrimary"
-            app:highlightedDaysLabelsColor="?attr/colorPrimary"/>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/calendarDayCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_margin="5dp"
-            android:padding="5dp"
-            style="?attr/materialCardViewElevatedStyle"
-            android:layout_below="@+id/calendarView">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorOnSurfaceInverse"
-                android:textSize="16sp"
-                android:padding="24dp"
-                android:text="@string/sampleText"
-
-                />
-        </com.google.android.material.card.MaterialCardView>
-
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/calendarDayCard"
-            android:rowCount="3"
-            android:columnCount="3"
-            android:layout_margin="5dp"
-            android:padding="5dp">
-            <ImageButton
-                android:id="@+id/pregnancy"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:padding="36dp"
-                android:src="@drawable/ic_star"
-                android:contentDescription="@string/pregnancy"
-                />
-            <ImageButton
-                android:id="@+id/pregnancy2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:src="@drawable/ic_star"
-                android:padding="36dp"
-                android:contentDescription="@string/pregnancy"
-                />
-            <ImageButton
-                android:id="@+id/pregnancy3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:src="@drawable/ic_star"
-                android:padding="36dp"
-                android:contentDescription="@string/pregnancy"
-                />
-            <ImageButton
-                android:id="@+id/pregnancy0"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:src="@drawable/ic_star"
-                android:padding="36dp"
-                android:contentDescription="@string/pregnancy"
-                />
-            <ImageButton
-                android:id="@+id/pregnancy02"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:src="@drawable/ic_star"
-                android:padding="36dp"
-                android:contentDescription="@string/pregnancy"
-                />
-            <ImageButton
-                android:id="@+id/pregnancy03"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:src="@drawable/ic_star"
-                android:padding="36dp"
-                android:contentDescription="@string/pregnancy"
-                />
-            <ImageButton
-                android:id="@+id/pregnancy1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:src="@drawable/ic_star"
-                android:padding="36dp"
-                android:contentDescription="@string/pregnancy"
-                />
-            <ImageButton
-                android:id="@+id/pregnancy12"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:src="@drawable/ic_star"
-                android:padding="36dp"
-                android:contentDescription="@string/pregnancy"
-                />
-            <ImageButton
-                android:id="@+id/pregnancy13"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:src="@drawable/ic_star"
-                android:padding="36dp"
-                android:contentDescription="@string/pregnancy"
-                />
-        </GridLayout>
-
-
-
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_alignParentBottom="true"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/bottom_navigation_menu" />
-    </RelativeLayout>
-
-</ScrollView>
