@@ -121,6 +121,7 @@
                         android:layout_centerHorizontal="true"
                         android:background="?attr/colorOnSurfaceInverse"
                         android:contentDescription="@string/pregnancy"
+                        android:clickable="false"
                         />
                     <TextView
                         android:id="@+id/calendarLogText"
@@ -133,6 +134,7 @@
                         android:layout_marginBottom="5dp"
                         android:text="Log Symptomps"
                         android:textSize="16sp"
+                        android:clickable="false"
                         />
                 </RelativeLayout>
                 <RelativeLayout
@@ -152,6 +154,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:padding="10dp"
+                        android:clickable="false"
                         android:src="@drawable/ic_add_to_calendar"
                         android:layout_centerHorizontal="true"
                         android:background="?attr/colorOnSurfaceInverse"
@@ -166,6 +169,7 @@
                         android:paddingVertical="10dp"
                         android:paddingHorizontal="5dp"
                         android:layout_marginBottom="5dp"
+                        android:clickable="false"
                         android:text="Add Period Dates"
                         android:textSize="16sp"
                         />
@@ -192,6 +196,7 @@
                         android:layout_centerHorizontal="true"
                         android:background="?attr/colorOnSurfaceInverse"
                         android:contentDescription="@string/pregnancy"
+                        android:clickable="false"
                         />
                     <TextView
                         android:id="@+id/calendarSwitchModeText"
@@ -204,6 +209,7 @@
                         android:layout_marginBottom="5dp"
                         android:text="Switch Mode"
                         android:textSize="16sp"
+                        android:clickable="false"
                         />
                 </RelativeLayout>
                 <RelativeLayout
@@ -227,6 +233,7 @@
                         android:layout_centerHorizontal="true"
                         android:background="?attr/colorOnSurfaceInverse"
                         android:contentDescription="@string/pregnancy"
+                        android:clickable="false"
                         />
                     <TextView
                         android:id="@+id/calendarHospitalsText"
@@ -239,6 +246,7 @@
                         android:layout_marginBottom="5dp"
                         android:text="Nearby Hospitals"
                         android:textSize="16sp"
+                        android:clickable="false"
                         />
                 </RelativeLayout>
             </GridLayout>
