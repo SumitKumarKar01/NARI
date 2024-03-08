@@ -11,53 +11,69 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Period Start Date" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/datePicker1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Select Date" />
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Period Start Date" />
 
-        <TextView
-            android:id="@+id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Period End Date" />
-
-        <TextView
-            android:id="@+id/datePicker2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Select Date" />
+            <TextView
+                android:id="@+id/datePicker1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:hint="Select Date" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Period End Date" />
+
+            <TextView
+                android:id="@+id/datePicker2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Select Date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
+            <ImageButton
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/ic_star"
                 android:text="Save" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/editButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/ic_star"
                 android:text="Edit" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/deleteButton"
                 android:layout_height="wrap_content"
-                android:layout_weight="wrap_content"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_star"
                 android:text="Delete" />
         </LinearLayout>
 
