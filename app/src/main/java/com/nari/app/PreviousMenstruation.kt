@@ -2,9 +2,11 @@ package com.nari.app
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.util.Pair
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -18,29 +20,27 @@ class PreviousMenstruation : AppCompatActivity() {
         setContentView(R.layout.activity_previous_menstruation)
         Log.d("ViewDebug", "WORKING")
 
-        val datePicker1: TextView = findViewById(R.id.datePicker1)
-        val datePicker2: TextView = findViewById(R.id.datePicker2)
+        val addDateButton: ImageButton = findViewById(R.id.addDateButton)
+        addDateButton.setOnClickListener {
+            val builder: MaterialDatePicker.Builder<Pair<Long, Long>> = MaterialDatePicker.Builder.dateRangePicker()
+            val picker: MaterialDatePicker<Pair<Long, Long>> = builder.build()
 
-        datePicker1.setOnClickListener {
-            showDatePicker(it as TextView)
-        }
+            picker.addOnPositiveButtonClickListener { dateRange ->
+                if (dateRange != null) {
+                    val startDate = Date(dateRange.first)
+                    val endDate = Date(dateRange.second)
 
-        datePicker2.setOnClickListener {
-            showDatePicker(it as TextView)
+                    val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val formattedStartDate = format.format(startDate)
+                    val formattedEndDate = format.format(endDate)
+
+                    Log.d("DatePicker", "Start Date: $formattedStartDate, End Date: $formattedEndDate")
+                }
+            }
+
+            picker.show(supportFragmentManager, picker.toString())
         }
     }
 
-    private fun showDatePicker(dateTextView: TextView) {
-        val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Select date")
-            .build()
 
-        datePicker.addOnPositiveButtonClickListener { dateLong ->
-            val date = Date(dateLong)
-            val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            dateTextView.text = format.format(date)
-        }
-
-        datePicker.show(supportFragmentManager, "DATE_PICKER")
-    }
 }
