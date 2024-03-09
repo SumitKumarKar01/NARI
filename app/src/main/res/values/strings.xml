@@ -34,5 +34,7 @@
     <string name="selectedDate">Selected Date: %1$s</string>
     <string name="period_start_date">Period Start Date</string>
     <string name="period_end_date">Period End Date</string>
+    <string name="today_date">Today Date</string>
+    <string name="today_notes">Today notes</string>
 
 </resources>

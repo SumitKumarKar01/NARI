@@ -1,0 +1,33 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/noteEditText"
+        android:layout_width ="match_parent"
+        android:layout_height ="wrap_content"
+        android:layout_weight ="1"
+        android:layout_gravity="center_horizontal"
+        android:inputType="textMultiLine"
+        android:maxLines ="4"
+        android:maxLength ="2000"
+
+        android:hint="Enter note" />
+
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Confirm" />
+
+</LinearLayout>
