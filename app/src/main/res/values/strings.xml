@@ -32,5 +32,7 @@
     <string name="sampleCommentContent">This is a sample comment content.</string>
     <string name="selectLastPeriodDate">Select Last Period Date: </string>
     <string name="selectedDate">Selected Date: %1$s</string>
+    <string name="period_start_date">Period Start Date</string>
+    <string name="period_end_date">Period End Date</string>
 
 </resources>

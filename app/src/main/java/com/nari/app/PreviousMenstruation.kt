@@ -1,5 +1,6 @@
 package com.nari.app
 
+import android.content.Intent
 import com.nari.app.DateRangeDatabase
 import android.os.Bundle
 import android.util.Log
@@ -10,17 +11,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.Pair
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class PreviousMenstruation : AppCompatActivity() {
-    private lateinit var db: DateRangeDatabase
+    private lateinit var dateRangeViewModel: DateRangeViewModel
     private lateinit var dateRangeDao: DateRangeDao
 
 
@@ -28,13 +34,31 @@ class PreviousMenstruation : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_previous_menstruation)
-        db = Room.databaseBuilder(
+        Log.d("ViewDebug", "WORKING")
+        val db = Room.databaseBuilder(
             applicationContext,
-            DateRangeDatabase::class.java, "date-range-database"
+            DateRangeDatabase::class.java, "date_range_database"
         ).build()
 
         dateRangeDao = db.dateRangeDao()
-        Log.d("ViewDebug", "WORKING")
+
+        val viewModelFactory = DateRangeViewModelFactory(dateRangeDao)
+        dateRangeViewModel = ViewModelProvider(this, viewModelFactory).get(DateRangeViewModel::class.java)
+
+
+        val recyclerView: RecyclerView = findViewById(R.id.previousMenstruationRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val adapter = DateRangeAdapter(emptyList(), dateRangeDao)
+        recyclerView.adapter = adapter
+
+
+        dateRangeViewModel = ViewModelProvider(this).get(DateRangeViewModel::class.java)
+        dateRangeViewModel.allDateRanges.observe(this, Observer { dateRanges ->
+            // Update the cached copy of the date ranges in the adapter.
+            adapter.dateRanges = dateRanges
+            adapter.notifyDataSetChanged()
+        })
 
         val addDateButton: ImageButton = findViewById(R.id.addDateButton)
         addDateButton.setOnClickListener {
@@ -63,15 +87,17 @@ class PreviousMenstruation : AppCompatActivity() {
         }
         val confirmDateButton: ImageButton = findViewById(R.id.confirmDateButton)
         confirmDateButton.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                val allDateRanges = dateRangeDao.getAllDateRanges()
-                allDateRanges.forEach { dateRange ->
-                    val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                    val formattedStartDate = format.format(Date(dateRange.startDate))
-                    val formattedEndDate = format.format(Date(dateRange.endDate))
-                    Log.d("DateRange", "Start Date: $formattedStartDate, End Date: $formattedEndDate")
+            dateRangeViewModel.allDateRanges.observe(this@PreviousMenstruation, Observer { allDateRanges ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    allDateRanges.forEach { dateRange ->
+                        val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val formattedStartDate = format.format(Date(dateRange.startDate))
+                        val formattedEndDate = format.format(Date(dateRange.endDate))
+                        Log.d("DateRange", "Start Date: $formattedStartDate, End Date: $formattedEndDate")
+                    }
                 }
-            }
+            })
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
     }
