@@ -1,82 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/previousMenstruationView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".PreviousMenstruation">
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/previousMenstruationView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        tools:context=".PreviousMenstruation">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/previousMenstruationRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp" />
+
+
+
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        >
+        <ImageButton
+            android:id="@+id/addDateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Period Start Date" />
-
-            <TextView
-                android:id="@+id/datePicker1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:hint="Select Date" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:id="@+id/text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Period End Date" />
-
-            <TextView
-                android:id="@+id/datePicker2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Select Date" />
-        </LinearLayout>
-
-        <LinearLayout
+            android:src="@drawable/ic_add_circle"
+            android:background="@drawable/circular_background"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:text="Add Dates" />
+        <ImageButton
+            android:id="@+id/confirmDateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_star"
-                android:text="Save" />
-
-            <ImageButton
-                android:id="@+id/editButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_star"
-                android:text="Edit" />
-
-            <ImageButton
-                android:id="@+id/deleteButton"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:src="@drawable/ic_star"
-                android:text="Delete" />
-        </LinearLayout>
+            android:src="@drawable/ic_check_circle"
+            android:background="@drawable/circular_background"
+            android:layout_margin="10dp"
+            android:padding="5dp"
+            android:text="Confirm Dates" />
 
     </LinearLayout>
-
-</ScrollView>
+</RelativeLayout>
