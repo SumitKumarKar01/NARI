@@ -23,7 +23,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -90,62 +89,85 @@ class MainActivity : AppCompatActivity() {
 
 
         //Calendar
-        calendar()
+        menstruationCalendar()
+
 
     }
 
-    private fun calendar() {
-        val calendarView: CalendarView = findViewById(R.id.calendarView)
-        val calendarDayText: TextView = findViewById(R.id.calendarDayText)
+    private fun menstruationCalendar() {
+    val calendarView: CalendarView = findViewById(R.id.calendarView)
+    val calendarDayText: TextView = findViewById(R.id.calendarDayText)
 
-        // Predict the next period start and end date based on the fixed previous end date
-        applicationScope.launch {
-            // Predict the next period start and end date based on the fixed previous end date
-            val predictedDates = predictNextPeriod()
+    applicationScope.launch {
+        val predictedDates = predictNextPeriod()
+        val ovulationDates = calculateOvulationDates()
 
-            val predictedStartDate = Calendar.getInstance()
-            predictedStartDate.time = predictedDates.first
+        val predictedStartDate = Calendar.getInstance()
+        predictedStartDate.time = predictedDates.first
 
-            val predictedEndDate = Calendar.getInstance()
-            predictedEndDate.time = predictedDates.second
+        val predictedEndDate = Calendar.getInstance()
+        predictedEndDate.time = predictedDates.second
 
-            val datesInRange = ArrayList<Calendar>()
-            val currentDate = predictedStartDate.clone() as Calendar
+        val ovulationStartDate = Calendar.getInstance()
+        ovulationStartDate.time = ovulationDates.first
 
-            for (i in 0 until 12) {
-                while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
-                    datesInRange.add(currentDate.clone() as Calendar)
-                    currentDate.add(Calendar.DATE, 1)
-                }
+        val ovulationEndDate = Calendar.getInstance()
+        ovulationEndDate.time = ovulationDates.second
 
-                // Add the cycle length to the start and end dates for the next month
-                predictedStartDate.add(Calendar.DATE, calculateModeCycleLength())
-                predictedEndDate.add(Calendar.DATE, calculateModeCycleLength())
-                currentDate.time = predictedStartDate.time
+        val datesInRange = ArrayList<Calendar>()
+        val ovulationDatesInRange = ArrayList<Calendar>()
+        val currentDate = predictedStartDate.clone() as Calendar
+        val currentOvulationDate = ovulationStartDate.clone() as Calendar
+
+        for (i in 0 until 12) {
+            while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
+                datesInRange.add(currentDate.clone() as Calendar)
+                currentDate.add(Calendar.DATE, 1)
             }
 
-            withContext(Dispatchers.Main) {
-                val calendarDayList = datesInRange.map{
-                    CalendarDay(it).apply{
-                        imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day)
-                    }
-                }
-                calendarView.setCalendarDays(calendarDayList)
-                val today = Calendar.getInstance()
-                if (datesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
-                    // If it is, change the text of calendarDayText
-                    calendarDayText.text = "You might have period today!"
-                } else {
-                    // If it's not, set the text to a default value
-                    calendarDayText.text = "No Alert Today"
-                }
-
+            while (currentOvulationDate.before(ovulationEndDate) || currentOvulationDate == ovulationEndDate) {
+                ovulationDatesInRange.add(currentOvulationDate.clone() as Calendar)
+                currentOvulationDate.add(Calendar.DATE, 1)
             }
+
+            predictedStartDate.add(Calendar.DATE, calculateModeCycleLength())
+            predictedEndDate.add(Calendar.DATE, calculateModeCycleLength())
+            currentDate.time = predictedStartDate.time
+
+            ovulationStartDate.add(Calendar.DATE, calculateModeCycleLength())
+            ovulationEndDate.add(Calendar.DATE, calculateModeCycleLength())
+            currentOvulationDate.time = ovulationStartDate.time
         }
 
+        withContext(Dispatchers.Main) {
+            val calendarDayList = datesInRange.map {
+                CalendarDay(it).apply {
+                    imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day)
+                }
+            }
 
+            val ovulationDayList = ovulationDatesInRange.map {
+                CalendarDay(it).apply {
+                    imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day_ovulation)
+                }
+            }
+
+            // Combine the period and ovulation dates into a single list
+            val combinedList = calendarDayList + ovulationDayList
+
+            calendarView.setCalendarDays(combinedList)
+
+            val today = Calendar.getInstance()
+            if (datesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
+                calendarDayText.text = "You might have period today!"
+            } else if (ovulationDatesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
+                calendarDayText.text = "You might be ovulating today!"
+            } else {
+                calendarDayText.text = "No Alert Today"
+            }
+        }
     }
-
+}
 
     private fun navigation(){
 
@@ -248,6 +270,11 @@ class MainActivity : AppCompatActivity() {
         auth.removeAuthStateListener(authStateListener)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        applicationScope.cancel() // Cancel the CoroutineScope when the activity is destroyed
+    }
+
     private fun isPinSet(): Boolean {
         // Check if PIN is already set
         return sharedPreferences.getBoolean("isPinSet", false)
@@ -285,9 +312,32 @@ class MainActivity : AppCompatActivity() {
 
         return@withContext Pair(nextStartDate, nextEndDate)
     }
-    private fun switchCalendarModes(){
 
+    private suspend fun calculateOvulationDates(): Pair<Date, Date> = withContext(Dispatchers.IO) {
+        // Get the last end date from the database
+        val lastEndDate = dateRangeDao.getLastEndDate()
+
+        // Convert the last end date to a Calendar object
+        val calendar = Calendar.getInstance()
+        lastEndDate?.let {
+            calendar.timeInMillis = it
+        }
+
+        // Add 12 days to the calendar to get the ovulation start date
+        calendar.add(Calendar.DATE, 12)
+        val ovulationStartDate = calendar.time
+
+        // Add 6 days to the calendar to get the ovulation end date
+        calendar.add(Calendar.DATE, 6)
+        val ovulationEndDate = calendar.time
+
+        // Log the ovulation dates
+        Log.d("MainActivity", "Ovulation start date: $ovulationStartDate")
+        Log.d("MainActivity", "Ovulation end date: $ovulationEndDate")
+
+        return@withContext Pair(ovulationStartDate, ovulationEndDate)
     }
+
 
     private fun calculateModeCycleLength(): Int {
         // Get all date ranges from the database
@@ -322,10 +372,11 @@ class MainActivity : AppCompatActivity() {
 
         return mode ?: 5 // Return the mode or a default value of 5 if no mode can be calculated
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        applicationScope.cancel() // Cancel the CoroutineScope when the activity is destroyed
+
+    private fun switchCalendarModes(){
+
     }
+
 
 
 
