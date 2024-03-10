@@ -238,8 +238,6 @@ class MainActivity : AppCompatActivity() {
 
     private suspend fun predictNextPeriod(): Pair<Date, Date> = withContext(Dispatchers.IO) {
 
-        checkDatabaseConnection()
-        //testDatabase()
         val cycleLength = calculateModeCycleLength()
         val periodLength = calculateModePeriodLength()
 
@@ -310,27 +308,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         applicationScope.cancel() // Cancel the CoroutineScope when the activity is destroyed
     }
-    private fun checkDatabaseConnection() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val db = Room.databaseBuilder(
-                    applicationContext,
-                    DateRangeDatabase::class.java, "date_ranges"
-                ).build()
 
-                val dateRangeDao = db.dateRangeDao()
-
-                // Try to access the database
-                val lastStartDate = dateRangeDao.getLastStartDate()
-
-                // If no exception is thrown, the database connection is fine
-                Log.d("MainActivity", "PM Database connection is fine $lastStartDate")
-            } catch (e: Exception) {
-                // If an exception is thrown, there's a problem with the database connection
-                Log.e("MainActivity", "PM Failed to connect to the database", e)
-            }
-        }
-    }
 
 
 
