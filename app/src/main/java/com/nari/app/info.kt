@@ -3,6 +3,8 @@ package com.nari.app
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.appcompat.widget.SearchView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
 
@@ -46,6 +48,22 @@ class info : AppCompatActivity() {
             intent.putExtra("category", "Period Pain")
             startActivity(intent)
         }
+
+        val searchView = findViewById<SearchView>(R.id.searchView)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // User submitted the search. Perform your search action here (if necessary)
+                Log.d("SearchView", "Search text is: $query")
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Text has changed, log it
+
+                return false
+            }
+        })
 
         //Bottom Navigation
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.info)
