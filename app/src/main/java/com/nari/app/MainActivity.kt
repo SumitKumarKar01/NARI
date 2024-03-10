@@ -9,11 +9,18 @@ import android.util.Log
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.room.Room
 import com.applandeo.materialcalendarview.CalendarDay
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.applandeo.materialcalendarview.CalendarView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,6 +28,20 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+
+
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    private val dateRangeDao: DateRangeDao by lazy {
+        val db = Room.databaseBuilder(
+            applicationContext,
+            DateRangeDatabase::class.java, "date_ranges"
+        ).build()
+
+        db.dateRangeDao()
+    }
+
+
 
 
     // Shared Preferences
@@ -40,6 +61,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_main)
+
+
 
 
         auth = FirebaseAuth.getInstance()
@@ -62,47 +85,47 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+
+
+
         //Calendar
         calendar()
-        val predictedDates = predictNextPeriod()
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val predictedStartDate = dateFormat.format(predictedDates.first)
-        val predictedEndDate = dateFormat.format(predictedDates.second)
 
-        Log.d("PeriodPrediction", "Predicted Next Period Start Date: $predictedStartDate")
-        Log.d("PeriodPrediction", "Predicted Next Period End Date: $predictedEndDate")
     }
 
     private fun calendar() {
         val calendarView: CalendarView = findViewById(R.id.calendarView)
 
         // Predict the next period start and end date based on the fixed previous end date
-        val predictedDates = predictNextPeriod()
-        val predictedStartDate = Calendar.getInstance()
-        predictedStartDate.time = predictedDates.first
+        applicationScope.launch {
+            // Predict the next period start and end date based on the fixed previous end date
+            val predictedDates = predictNextPeriod()
 
-        val predictedEndDate = Calendar.getInstance()
-        predictedEndDate.time = predictedDates.second
+            val predictedStartDate = Calendar.getInstance()
+            predictedStartDate.time = predictedDates.first
 
-        // Create a list of Calendar instances to represent the range
-        val datesInRange = ArrayList<Calendar>()
-        val currentDate = predictedStartDate.clone() as Calendar
+            val predictedEndDate = Calendar.getInstance()
+            predictedEndDate.time = predictedDates.second
 
-        while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
-            datesInRange.add(currentDate.clone() as Calendar)
-            currentDate.add(Calendar.DATE, 1)
-        }
+            val datesInRange = ArrayList<Calendar>()
+            val currentDate = predictedStartDate.clone() as Calendar
 
+            while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
+                datesInRange.add(currentDate.clone() as Calendar)
+                currentDate.add(Calendar.DATE, 1)
+            }
 
-
-        val calendarDayList = datesInRange.map{
-            CalendarDay(it).apply{
-                imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day)
-
-
+            withContext(Dispatchers.Main) {
+                val calendarDayList = datesInRange.map{
+                    CalendarDay(it).apply{
+                        imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day)
+                    }
+                }
+                calendarView.setCalendarDays(calendarDayList)
             }
         }
-        calendarView.setCalendarDays(calendarDayList)
+
+
     }
 
 
@@ -213,46 +236,102 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun predictNextPeriod(): Pair<Date, Date> {
+    private suspend fun predictNextPeriod(): Pair<Date, Date> = withContext(Dispatchers.IO) {
 
-        val periodDate: SharedPreferences = getSharedPreferences("PeriodDate", Context.MODE_PRIVATE)
-        val previousEndDateString = periodDate.getString("selectedDate", null)
+        checkDatabaseConnection()
+        //testDatabase()
+        val cycleLength = calculateModeCycleLength()
+        val periodLength = calculateModePeriodLength()
+
+        // Get the last end date from the database
+        val lastStartDate = dateRangeDao.getLastStartDate()
 
 
+        // Convert the last end date to a Calendar object
         val calendar = Calendar.getInstance()
-
-        // Set the fixed previous period end date
-        // Set the fixed previous period end date or use the retrieved date
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val previousEndDate = if (previousEndDateString != null) {
-            dateFormat.parse(previousEndDateString)
-        } else {
-            // If not available in SharedPreferences, use a default date or handle accordingly
-            dateFormat.parse("2023-11-01")
+        lastStartDate?.let {
+            calendar.timeInMillis = it
         }
 
-        Log.d("PeriodPrediction", "Previous Period End Date: $previousEndDate")
+        // Add the cycle length to the calendar
+        calendar.add(Calendar.DATE, cycleLength)
 
-        if (previousEndDate != null) {
-            calendar.time = previousEndDate
-        }
-
-        // Assuming a menstrual cycle length of 28 days, you can adjust this value accordingly
-        val cycleLength = 28
-
-        // Predict next period start date
-        calendar.add(Calendar.DAY_OF_MONTH, cycleLength)
+        // Convert the calendar back to a Date object
         val nextStartDate = calendar.time
 
-        // Predict next period end date
-        calendar.add(Calendar.DAY_OF_MONTH, 4) // Assuming a period lasts for 5 days, you can adjust this value
+        // Calculate nextEndDate the same way if needed
+        calendar.add(Calendar.DATE, periodLength)
         val nextEndDate = calendar.time
+        // Log the predicted dates
 
-        return Pair(nextStartDate, nextEndDate)
+        Log.d("MainActivity", "Predicted start date: $nextStartDate")
+        Log.d("MainActivity", "Predicted end date: $nextEndDate")
+
+        return@withContext Pair(nextStartDate, nextEndDate)
     }
     private fun switchCalendarModes(){
 
     }
+
+    private fun calculateModeCycleLength(): Int {
+        // Get all date ranges from the database
+        val dateRanges = dateRangeDao.getAll()
+
+        // Calculate the differences between consecutive start dates
+        val differences = mutableListOf<Int>()
+        for (i in 1 until dateRanges.size) {
+            val diff = dateRanges[i].startDate - dateRanges[i - 1].startDate
+            differences.add((diff / (1000 * 60 * 60 * 24)).toInt()) // Convert to days
+        }
+
+        // Calculate the mode of the differences
+        val frequencyMap = differences.groupingBy { it }.eachCount()
+        val mode = frequencyMap.maxByOrNull { it.value }?.key
+
+        return mode ?: 28 // Return the mode or a default value of 28 if no mode can be calculated
+    }
+    private fun calculateModePeriodLength(): Int {
+        // Get all date ranges from the database
+        val dateRanges = dateRangeDao.getAll()
+
+        // Calculate the differences between start and end dates
+        val differences = dateRanges.map { dateRange ->
+            val diff = dateRange.endDate - dateRange.startDate
+            (diff / (1000 * 60 * 60 * 24)).toInt() // Convert to days
+        }
+
+        // Calculate the mode of the differences
+        val frequencyMap = differences.groupingBy { it }.eachCount()
+        val mode = frequencyMap.maxByOrNull { it.value }?.key
+
+        return mode ?: 5 // Return the mode or a default value of 5 if no mode can be calculated
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        applicationScope.cancel() // Cancel the CoroutineScope when the activity is destroyed
+    }
+    private fun checkDatabaseConnection() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val db = Room.databaseBuilder(
+                    applicationContext,
+                    DateRangeDatabase::class.java, "date_ranges"
+                ).build()
+
+                val dateRangeDao = db.dateRangeDao()
+
+                // Try to access the database
+                val lastStartDate = dateRangeDao.getLastStartDate()
+
+                // If no exception is thrown, the database connection is fine
+                Log.d("MainActivity", "PM Database connection is fine $lastStartDate")
+            } catch (e: Exception) {
+                // If an exception is thrown, there's a problem with the database connection
+                Log.e("MainActivity", "PM Failed to connect to the database", e)
+            }
+        }
+    }
+
 
 
 }

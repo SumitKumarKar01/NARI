@@ -1,5 +1,6 @@
 package com.nari.app
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,4 +16,7 @@ class DateRangeViewModel(private val dateRangeDao: DateRangeDao) : ViewModel() {
     fun delete(dateRange: DateRange) = viewModelScope.launch {
         dateRangeDao.delete(dateRange)
     }
+
+
+
 }

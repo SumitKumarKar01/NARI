@@ -37,7 +37,7 @@ class PreviousMenstruation : AppCompatActivity() {
         Log.d("ViewDebug", "WORKING")
         val db = Room.databaseBuilder(
             applicationContext,
-            DateRangeDatabase::class.java, "date_range_database"
+            DateRangeDatabase::class.java, "date_ranges"
         ).build()
 
         dateRangeDao = db.dateRangeDao()
@@ -97,9 +97,31 @@ class PreviousMenstruation : AppCompatActivity() {
                     }
                 }
             })
+            checkDatabaseConnection()
             startActivity(Intent(this, MainActivity::class.java))
         }
 
+    }
+    private fun checkDatabaseConnection() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val db = Room.databaseBuilder(
+                    applicationContext,
+                    DateRangeDatabase::class.java, "date_ranges"
+                ).build()
+
+                val dateRangeDao = db.dateRangeDao()
+
+                // Try to access the database
+                val lastStartDate = dateRangeDao.getLastStartDate()
+
+                // If no exception is thrown, the database connection is fine
+                Log.d("MainActivity", "PM Database connection is fine $lastStartDate")
+            } catch (e: Exception) {
+                // If an exception is thrown, there's a problem with the database connection
+                Log.e("MainActivity", "PM Failed to connect to the database", e)
+            }
+        }
     }
 
 

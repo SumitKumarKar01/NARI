@@ -11,8 +11,18 @@ interface DateRangeDao {
     @Insert
     suspend fun insert(dateRange: DateRange)
 
+    @Query("SELECT * FROM date_ranges")
+    fun getAll(): List<DateRange>
+
     @Query("SELECT * FROM date_ranges ORDER BY startDate DESC, endDate DESC")
     fun getAllDateRanges(): LiveData<List<DateRange>>
+
+    @Query("SELECT endDate FROM date_ranges ORDER BY endDate DESC LIMIT 1")
+    fun getLastEndDate(): Long?
+
+    @Query("SELECT startDate FROM date_ranges ORDER BY startDate DESC LIMIT 1")
+    fun getLastStartDate(): Long?
+
     @Query("UPDATE date_ranges SET startDate = :newStartDate WHERE id = :id")
     suspend fun updateStartDate(id: Int, newStartDate: Long)
 
