@@ -45,6 +45,7 @@ class ReadInfoActivity : AppCompatActivity() {
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
+
         finish()
         return true
     }
