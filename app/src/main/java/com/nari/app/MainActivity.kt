@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.room.Room
@@ -95,6 +96,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun calendar() {
         val calendarView: CalendarView = findViewById(R.id.calendarView)
+        val calendarDayText: TextView = findViewById(R.id.calendarDayText)
 
         // Predict the next period start and end date based on the fixed previous end date
         applicationScope.launch {
@@ -110,9 +112,16 @@ class MainActivity : AppCompatActivity() {
             val datesInRange = ArrayList<Calendar>()
             val currentDate = predictedStartDate.clone() as Calendar
 
-            while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
-                datesInRange.add(currentDate.clone() as Calendar)
-                currentDate.add(Calendar.DATE, 1)
+            for (i in 0 until 12) {
+                while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
+                    datesInRange.add(currentDate.clone() as Calendar)
+                    currentDate.add(Calendar.DATE, 1)
+                }
+
+                // Add the cycle length to the start and end dates for the next month
+                predictedStartDate.add(Calendar.DATE, calculateModeCycleLength())
+                predictedEndDate.add(Calendar.DATE, calculateModeCycleLength())
+                currentDate.time = predictedStartDate.time
             }
 
             withContext(Dispatchers.Main) {
@@ -122,6 +131,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 calendarView.setCalendarDays(calendarDayList)
+                val today = Calendar.getInstance()
+                if (datesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
+                    // If it is, change the text of calendarDayText
+                    calendarDayText.text = "You might have period today!"
+                } else {
+                    // If it's not, set the text to a default value
+                    calendarDayText.text = "No Alert Today"
+                }
+
             }
         }
 
