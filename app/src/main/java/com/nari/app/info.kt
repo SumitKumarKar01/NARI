@@ -77,6 +77,7 @@ class info : AppCompatActivity() {
                     card3.visibility = View.GONE
                     card4.visibility = View.GONE
                     card5.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
 
                     // Get all items from the repository
                     val itemRepository = ItemRepository(this@info)
