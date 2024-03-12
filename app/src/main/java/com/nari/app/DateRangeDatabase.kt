@@ -4,7 +4,7 @@ import androidx.room.RoomDatabase
 import com.nari.app.DateRange
 import com.nari.app.DateRangeDao
 
-@Database(entities = [DateRange::class], version = 1)
+@Database(entities = [DateRange::class], version = 1, exportSchema = false)
 abstract class DateRangeDatabase : RoomDatabase() {
     abstract fun dateRangeDao(): DateRangeDao
 }

@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.page_3 ->{
-                    startActivity(Intent(this,info::class.java))
+                    startActivity(Intent(this,InfoActivity::class.java))
                     finish()
                     true
                 }

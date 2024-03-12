@@ -58,7 +58,7 @@
             android:name=".listInfo"
             android:exported="false" />
         <activity
-            android:name=".info"
+            android:name=".InfoActivity"
             android:exported="false" />
         <activity
             android:name=".pin"
