@@ -52,10 +52,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".infoPage"
+            android:name=".InfoPageActivity"
             android:exported="false" />
         <activity
-            android:name=".listInfo"
+            android:name=".ListInfoActivity"
             android:exported="false" />
         <activity
             android:name=".InfoActivity"

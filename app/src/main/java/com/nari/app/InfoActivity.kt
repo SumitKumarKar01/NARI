@@ -27,31 +27,31 @@ class InfoActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         card1.setOnClickListener {
-            val intent = Intent(this, listInfo::class.java)
+            val intent = Intent(this, ListInfoActivity::class.java)
             intent.putExtra("category", "Period")
             startActivity(intent)
         }
 
         card2.setOnClickListener {
-            val intent = Intent(this, listInfo::class.java)
+            val intent = Intent(this, ListInfoActivity::class.java)
             intent.putExtra("category", "Pregnancy")
             startActivity(intent)
         }
 
         card3.setOnClickListener {
-            val intent = Intent(this, listInfo::class.java)
+            val intent = Intent(this, ListInfoActivity::class.java)
             intent.putExtra("category", "Sex Health")
             startActivity(intent)
         }
 
         card4.setOnClickListener {
-            val intent = Intent(this, listInfo::class.java)
+            val intent = Intent(this, ListInfoActivity::class.java)
             intent.putExtra("category", "Contraceptive")
             startActivity(intent)
         }
 
         card5.setOnClickListener {
-            val intent = Intent(this, listInfo::class.java)
+            val intent = Intent(this, ListInfoActivity::class.java)
             intent.putExtra("category", "Period Pain")
             startActivity(intent)
         }

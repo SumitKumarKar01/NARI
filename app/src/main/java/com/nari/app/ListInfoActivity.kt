@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class listInfo : AppCompatActivity() {
+class ListInfoActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +40,7 @@ class listInfo : AppCompatActivity() {
         adapter.onCardClickListener = object : CardAdapter.OnCardClickListener {
             override fun onCardClick(cardId: Int) {
                 // Handle the card click here, use cardId as needed
-                intent = Intent(this@listInfo,ReadInfoActivity::class.java)
+                intent = Intent(this@ListInfoActivity,ReadInfoActivity::class.java)
                 intent.putExtra("card_id",cardId)
                 startActivity(intent)
                 finish()

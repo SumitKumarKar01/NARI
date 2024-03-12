@@ -1,16 +1,11 @@
 package com.nari.app
 
 import android.content.Intent
-import com.nari.app.DateRangeDatabase
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.util.Pair
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +15,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -43,7 +37,7 @@ class PreviousMenstruation : AppCompatActivity() {
         dateRangeDao = db.dateRangeDao()
 
         val viewModelFactory = DateRangeViewModelFactory(dateRangeDao)
-        dateRangeViewModel = ViewModelProvider(this, viewModelFactory).get(DateRangeViewModel::class.java)
+        dateRangeViewModel = ViewModelProvider(this, viewModelFactory)[DateRangeViewModel::class.java]
 
 
         val recyclerView: RecyclerView = findViewById(R.id.previousMenstruationRecyclerView)
@@ -53,8 +47,8 @@ class PreviousMenstruation : AppCompatActivity() {
         recyclerView.adapter = adapter
 
 
-        dateRangeViewModel = ViewModelProvider(this).get(DateRangeViewModel::class.java)
-        dateRangeViewModel.allDateRanges.observe(this, Observer { dateRanges ->
+        dateRangeViewModel = ViewModelProvider(this)[DateRangeViewModel::class.java]
+        dateRangeViewModel.allDateRanges.observe(this, { dateRanges ->
             // Update the cached copy of the date ranges in the adapter.
             adapter.dateRanges = dateRanges
             adapter.notifyDataSetChanged()
@@ -87,7 +81,7 @@ class PreviousMenstruation : AppCompatActivity() {
         }
         val confirmDateButton: ImageButton = findViewById(R.id.confirmDateButton)
         confirmDateButton.setOnClickListener {
-            dateRangeViewModel.allDateRanges.observe(this@PreviousMenstruation, Observer { allDateRanges ->
+            dateRangeViewModel.allDateRanges.observe(this@PreviousMenstruation, { allDateRanges ->
                 CoroutineScope(Dispatchers.IO).launch {
                     allDateRanges.forEach { dateRange ->
                         val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
