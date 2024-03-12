@@ -55,7 +55,7 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:contentDescription="Period  Pain"
+                        android:contentDescription="@string/period_pain"
                         android:scaleType="centerCrop"
                         app:srcCompat="@drawable/media" />
 
@@ -69,14 +69,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Period"
+                            android:text="@string/period"
                             android:textAppearance="?attr/textAppearanceTitleMedium" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Learn about how to manage pain  during your menstrual cycle."
+                            android:text="@string/learn_more"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textColor="?android:attr/textColorSecondary" />
 
@@ -104,7 +104,7 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:contentDescription="Period  Pain"
+                        android:contentDescription="@string/period_pain"
                         android:scaleType="centerCrop"
                         app:srcCompat="@drawable/media" />
 
@@ -118,7 +118,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Pregnancy"
+                            android:text="@string/pregnancy"
                             android:textAppearance="?attr/textAppearanceTitleMedium" />
 
                         <TextView

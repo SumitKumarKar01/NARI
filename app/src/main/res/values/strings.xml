@@ -36,5 +36,11 @@
     <string name="period_end_date">Period End Date</string>
     <string name="today_date">Today Date</string>
     <string name="today_notes">Today notes</string>
+    <string name="add_dates">Add Dates</string>
+    <string name="confirm_dates">Confirm Dates</string>
+    <string name="delete_dates">Delete Dates</string>
+    <string name="period_pain">Period Pain</string>
+    <string name="period">Period</string>
+    <string name="learn_more">Learn about how to manage pain during your menstrual cycle.</string>
 
 </resources>

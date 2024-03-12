@@ -40,8 +40,8 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
 
         holder.commentContent.text = comment.content
         // Handle upvotes and downvotes logic as needed
-        holder.CmntupvotesTextView.text = comment.upvotes.toString()
-        holder.CmntdownvotesTextView.text = comment.downvotes.toString()
+        holder.cmntupvotesTextView.text = comment.upvotes.toString()
+        holder.cmntdownvotesTextView.text = comment.downvotes.toString()
 
         if (userId != null) {
             updateVoteDrawables(comment.commentId, userId, holder)
@@ -67,20 +67,20 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
                                 if (voteType == "downvote") {
                                     comment.downvotes--
                                     comment.upvotes++
-                                    holder.CmntdownvotesTextView.text = comment.downvotes.toString()
-                                    holder.CmntupvotesTextView.text = comment.upvotes.toString()
+                                    holder.cmntdownvotesTextView.text = comment.downvotes.toString()
+                                    holder.cmntupvotesTextView.text = comment.upvotes.toString()
                                     updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
                                     updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
                                     document.reference.update("voteType", "upvote")
                                 } else if (voteType == "upvote") {
                                     comment.upvotes--
-                                    holder.CmntupvotesTextView.text = comment.upvotes.toString()
+                                    holder.cmntupvotesTextView.text = comment.upvotes.toString()
                                     updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
                                     document.reference.delete()
                                 }
                             } else {
                                 comment.upvotes++
-                                holder.CmntupvotesTextView.text = comment.upvotes.toString()
+                                holder.cmntupvotesTextView.text = comment.upvotes.toString()
                                 updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
                                 val voteId = UUID.randomUUID().toString()
                                 val vote = mapOf("userId" to userId, "commentId" to comment.commentId, "voteType" to "upvote")
@@ -113,20 +113,20 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
                                 if (voteType == "upvote") {
                                     comment.upvotes--
                                     comment.downvotes++
-                                    holder.CmntupvotesTextView.text = comment.upvotes.toString()
-                                    holder.CmntdownvotesTextView.text = comment.downvotes.toString()
+                                    holder.cmntupvotesTextView.text = comment.upvotes.toString()
+                                    holder.cmntdownvotesTextView.text = comment.downvotes.toString()
                                     updateVoteCountOnFirestore(comment.commentId, "upvotes", comment.upvotes)
                                     updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
                                     document.reference.update("voteType", "downvote")
                                 } else if (voteType == "downvote") {
                                     comment.downvotes--
-                                    holder.CmntdownvotesTextView.text = comment.downvotes.toString()
+                                    holder.cmntdownvotesTextView.text = comment.downvotes.toString()
                                     updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
                                     document.reference.delete()
                                 }
                             } else {
                                 comment.downvotes++
-                                holder.CmntdownvotesTextView.text = comment.downvotes.toString()
+                                holder.cmntdownvotesTextView.text = comment.downvotes.toString()
                                 updateVoteCountOnFirestore(comment.commentId, "downvotes", comment.downvotes)
                                 val voteId = UUID.randomUUID().toString()
                                 val vote = mapOf("userId" to userId, "commentId" to comment.commentId, "voteType" to "downvote")
@@ -229,8 +229,8 @@ class CommentAdapter(private val postId: String) : RecyclerView.Adapter<CommentA
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val commentContent: TextView = itemView.findViewById(R.id.textCommentContent)
-        val CmntupvotesTextView: TextView = itemView.findViewById(R.id.tvcUpvoteCount)
-        val CmntdownvotesTextView: TextView = itemView.findViewById(R.id.tvcDownvoteCount)
+        val cmntupvotesTextView: TextView = itemView.findViewById(R.id.tvcUpvoteCount)
+        val cmntdownvotesTextView: TextView = itemView.findViewById(R.id.tvcDownvoteCount)
         val btnCmntUpvote: ImageButton = itemView.findViewById(R.id.btnCommentUpvote)
         val btnCmntDownvote: ImageButton = itemView.findViewById(R.id.btnCommentDownvote)
     }

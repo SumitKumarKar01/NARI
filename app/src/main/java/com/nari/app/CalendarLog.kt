@@ -34,11 +34,11 @@ class CalendarLog : AppCompatActivity() {
         val adapter = LogEntryAdapter(emptyList(), logEntryDao, lifecycleScope)
         recyclerView.adapter = adapter
 
-        logEntryDao.getAll().observe(this, Observer { logEntries ->
+        logEntryDao.getAll().observe(this) { logEntries ->
             // Update the cached copy of the log entries in the adapter.
             adapter.logEntries = logEntries
             adapter.notifyDataSetChanged()
-        })
+        }
 
         val confirmNoteButton = findViewById<ImageButton>(R.id.confirmNoteButton)
         confirmNoteButton.setOnClickListener {
