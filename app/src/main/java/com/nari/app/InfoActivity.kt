@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
 
-class info : AppCompatActivity() {
+class InfoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_info)
@@ -80,7 +80,7 @@ class info : AppCompatActivity() {
                     recyclerView.visibility = View.VISIBLE
 
                     // Get all items from the repository
-                    val itemRepository = ItemRepository(this@info)
+                    val itemRepository = ItemRepository(this@InfoActivity)
                     val items = itemRepository.getAllItems()
 
                     // Search for the query in the descriptions
@@ -111,7 +111,7 @@ class info : AppCompatActivity() {
                     cardAdapter.onCardClickListener = object : CardAdapter.OnCardClickListener {
                         override fun onCardClick(cardId: Int) {
                             // Handle the card click here, use cardId as needed
-                            intent = Intent(this@info,ReadInfoActivity::class.java)
+                            intent = Intent(this@InfoActivity,ReadInfoActivity::class.java)
                             intent.putExtra("card_id",cardId)
                             startActivity(intent)
 
@@ -156,7 +156,7 @@ class info : AppCompatActivity() {
                     true
                 }
                 R.id.page_3 ->{
-                    startActivity(Intent(this,info::class.java))
+                    startActivity(Intent(this,InfoActivity::class.java))
                     finish()
                     true
                 }
