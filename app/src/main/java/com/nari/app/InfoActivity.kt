@@ -79,6 +79,10 @@ class InfoActivity : AppCompatActivity() {
                     card5.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
 
+                    // Create an instance of DataUpdater and call updateDataFromJson
+                    val dataUpdater = JsonDatabaseSync(this@InfoActivity)
+                    dataUpdater.updateDataFromJson()
+
                     // Get all items from the repository
                     val itemRepository = ItemRepository(this@InfoActivity)
                     val items = itemRepository.getAllItems()
