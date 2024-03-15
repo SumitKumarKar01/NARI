@@ -159,11 +159,11 @@ class MainActivity : AppCompatActivity() {
 
             val today = Calendar.getInstance()
             if (datesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
-                calendarDayText.text = "You might have period today!"
+                calendarDayText.text = getString(R.string.period_today)
             } else if (ovulationDatesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
-                calendarDayText.text = "You might be ovulating today!"
+                calendarDayText.text = getString(R.string.ovulating_today)
             } else {
-                calendarDayText.text = "No Alert Today"
+                calendarDayText.text = getString(R.string.no_alert_today)
             }
         }
     }

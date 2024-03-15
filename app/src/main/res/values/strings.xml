@@ -42,5 +42,8 @@
     <string name="period_pain">Period Pain</string>
     <string name="period">Period</string>
     <string name="learn_more">Learn about how to manage pain during your menstrual cycle.</string>
+    <string name="period_today">You might have period today!</string>
+    <string name="ovulating_today">You might be ovulating today!</string>
+    <string name="no_alert_today">No Alert Today</string>
 
 </resources>
