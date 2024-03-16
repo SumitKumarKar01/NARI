@@ -52,7 +52,7 @@ class SettingsActivity : AppCompatActivity() {
         logoutIcon.setOnClickListener {
             auth.signOut()
             Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, Login::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()  // Close the current activity
         }
 

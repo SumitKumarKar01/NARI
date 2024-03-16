@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         val user = firebaseAuth.currentUser
         if (user == null) {
             // User is signed out, navigate to login screen
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // Close the current activity
         }

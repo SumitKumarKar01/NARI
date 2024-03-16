@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlin.system.exitProcess
 
-class Login : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     //Firebase Initialization
     private lateinit var auth: FirebaseAuth
