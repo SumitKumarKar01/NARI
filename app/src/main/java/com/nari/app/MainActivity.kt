@@ -188,12 +188,7 @@ class MainActivity : AppCompatActivity() {
                     finish() // Close the current activity
                     true
                 }
-                R.id.action_edit -> {
-                    val intent = Intent(this,DatePickerActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                    true
-                }
+
                 else -> false
             }
         }
