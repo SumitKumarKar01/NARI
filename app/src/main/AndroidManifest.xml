@@ -24,9 +24,6 @@
             android:name=".CalendarLog"
             android:exported="false" />
         <activity
-            android:name=".DatePickerActivity"
-            android:exported="false" />
-        <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
