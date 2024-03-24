@@ -368,9 +368,9 @@ class MainActivity : AppCompatActivity() {
         return mode ?: 5 // Return the mode or a default value of 5 if no mode can be calculated
     }
 
-    private fun switchCalendarModes(){
-
-    }
+//    private fun switchCalendarModes(){
+//
+//    }
 
 
 
