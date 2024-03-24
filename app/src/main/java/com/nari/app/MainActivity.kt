@@ -226,8 +226,8 @@ class MainActivity : AppCompatActivity() {
     private fun calendarButtonNavigation(){
         val calendarLog: RelativeLayout = findViewById(R.id.calendarLog)
         val calendarPreviousMenstruatuion: RelativeLayout = findViewById(R.id.calendarPreviousMenstruation)
-        val calendarSwitchMode: RelativeLayout = findViewById(R.id.calendarSwitchMode)
-        val calendarHospitals: RelativeLayout = findViewById(R.id.calendarHospitals)
+//        val calendarSwitchMode: RelativeLayout = findViewById(R.id.calendarSwitchMode)
+//        val calendarHospitals: RelativeLayout = findViewById(R.id.calendarHospitals)
 
         calendarLog.setOnClickListener {
             val intent = Intent(this,CalendarLog::class.java)
@@ -240,14 +240,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        calendarSwitchMode.setOnClickListener {
-            switchCalendarModes()
-        }
-        calendarHospitals.setOnClickListener {
-            val intent = Intent(this,Hospitals::class.java)
-            startActivity(intent)
-            finish()
-        }
+//        calendarSwitchMode.setOnClickListener {
+//            switchCalendarModes()
+//        }
+//        calendarHospitals.setOnClickListener {
+//            val intent = Intent(this,Hospitals::class.java)
+//            startActivity(intent)
+//            finish()
+//        }
 
     }
 
