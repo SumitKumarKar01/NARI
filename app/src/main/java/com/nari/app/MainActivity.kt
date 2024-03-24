@@ -22,6 +22,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import androidx.core.app.NotificationCompat
 
 import java.util.*
 
@@ -95,79 +99,81 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun menstruationCalendar() {
-    val calendarView: CalendarView = findViewById(R.id.calendarView)
-    val calendarDayText: TextView = findViewById(R.id.calendarDayText)
+        val calendarView: CalendarView = findViewById(R.id.calendarView)
+        val calendarDayText: TextView = findViewById(R.id.calendarDayText)
 
-    applicationScope.launch {
-        val predictedDates = predictNextPeriod()
-        val ovulationDates = calculateOvulationDates()
+        applicationScope.launch {
+            val predictedDates = predictNextPeriod()
+            val ovulationDates = calculateOvulationDates()
 
-        val predictedStartDate = Calendar.getInstance()
-        predictedStartDate.time = predictedDates.first
+            val predictedStartDate = Calendar.getInstance()
+            predictedStartDate.time = predictedDates.first
 
-        val predictedEndDate = Calendar.getInstance()
-        predictedEndDate.time = predictedDates.second
+            val predictedEndDate = Calendar.getInstance()
+            predictedEndDate.time = predictedDates.second
 
-        val ovulationStartDate = Calendar.getInstance()
-        ovulationStartDate.time = ovulationDates.first
+            val ovulationStartDate = Calendar.getInstance()
+            ovulationStartDate.time = ovulationDates.first
 
-        val ovulationEndDate = Calendar.getInstance()
-        ovulationEndDate.time = ovulationDates.second
+            val ovulationEndDate = Calendar.getInstance()
+            ovulationEndDate.time = ovulationDates.second
 
-        val datesInRange = ArrayList<Calendar>()
-        val ovulationDatesInRange = ArrayList<Calendar>()
-        val currentDate = predictedStartDate.clone() as Calendar
-        val currentOvulationDate = ovulationStartDate.clone() as Calendar
+            val datesInRange = ArrayList<Calendar>()
+            val ovulationDatesInRange = ArrayList<Calendar>()
+            val currentDate = predictedStartDate.clone() as Calendar
+            val currentOvulationDate = ovulationStartDate.clone() as Calendar
 
-        for (i in 0 until 12) {
-            while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
-                datesInRange.add(currentDate.clone() as Calendar)
-                currentDate.add(Calendar.DATE, 1)
-            }
-
-            while (currentOvulationDate.before(ovulationEndDate) || currentOvulationDate == ovulationEndDate) {
-                ovulationDatesInRange.add(currentOvulationDate.clone() as Calendar)
-                currentOvulationDate.add(Calendar.DATE, 1)
-            }
-
-            predictedStartDate.add(Calendar.DATE, calculateModeCycleLength())
-            predictedEndDate.add(Calendar.DATE, calculateModeCycleLength())
-            currentDate.time = predictedStartDate.time
-
-            ovulationStartDate.add(Calendar.DATE, calculateModeCycleLength())
-            ovulationEndDate.add(Calendar.DATE, calculateModeCycleLength())
-            currentOvulationDate.time = ovulationStartDate.time
-        }
-
-        withContext(Dispatchers.Main) {
-            val calendarDayList = datesInRange.map {
-                CalendarDay(it).apply {
-                    imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day)
+            for (i in 0 until 12) {
+                while (currentDate.before(predictedEndDate) || currentDate == predictedEndDate) {
+                    datesInRange.add(currentDate.clone() as Calendar)
+                    currentDate.add(Calendar.DATE, 1)
                 }
-            }
 
-            val ovulationDayList = ovulationDatesInRange.map {
-                CalendarDay(it).apply {
-                    imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day_ovulation)
+                while (currentOvulationDate.before(ovulationEndDate) || currentOvulationDate == ovulationEndDate) {
+                    ovulationDatesInRange.add(currentOvulationDate.clone() as Calendar)
+                    currentOvulationDate.add(Calendar.DATE, 1)
                 }
+
+                predictedStartDate.add(Calendar.DATE, calculateModeCycleLength())
+                predictedEndDate.add(Calendar.DATE, calculateModeCycleLength())
+                currentDate.time = predictedStartDate.time
+
+                ovulationStartDate.add(Calendar.DATE, calculateModeCycleLength())
+                ovulationEndDate.add(Calendar.DATE, calculateModeCycleLength())
+                currentOvulationDate.time = ovulationStartDate.time
             }
 
-            // Combine the period and ovulation dates into a single list
-            val combinedList = calendarDayList + ovulationDayList
+            withContext(Dispatchers.Main) {
+                val calendarDayList = datesInRange.map {
+                    CalendarDay(it).apply {
+                        imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day)
+                    }
+                }
 
-            calendarView.setCalendarDays(combinedList)
+                val ovulationDayList = ovulationDatesInRange.map {
+                    CalendarDay(it).apply {
+                        imageDrawable = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_selected_day_ovulation)
+                    }
+                }
 
-            val today = Calendar.getInstance()
-            if (datesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
-                calendarDayText.text = getString(R.string.period_today)
-            } else if (ovulationDatesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
-                calendarDayText.text = getString(R.string.ovulating_today)
-            } else {
-                calendarDayText.text = getString(R.string.no_alert_today)
+                // Combine the period and ovulation dates into a single list
+                val combinedList = calendarDayList + ovulationDayList
+
+                calendarView.setCalendarDays(combinedList)
+
+                val today = Calendar.getInstance()
+                if (datesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
+                    calendarDayText.text = getString(R.string.period_today)
+                    showNotification(getString(R.string.period_today))
+                } else if (ovulationDatesInRange.any { it.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR) && it.get(Calendar.YEAR) == today.get(Calendar.YEAR) }) {
+                    calendarDayText.text = getString(R.string.ovulating_today)
+                    showNotification(getString(R.string.ovulating_today))
+                } else {
+                    calendarDayText.text = getString(R.string.no_alert_today)
+                }
             }
         }
     }
-}
 
     private fun navigation(){
 
@@ -371,6 +377,43 @@ class MainActivity : AppCompatActivity() {
 //    private fun switchCalendarModes(){
 //
 //    }
+
+    private fun showNotification(text: String) {
+        val channelId = "period_and_ovulation_channel"
+        val notificationId = 1
+
+        // Create a notification channel for Android Oreo and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelId, name, importance).apply {
+                description = descriptionText
+            }
+
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        // Create a notification builder
+        val builder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_star)
+            .setContentTitle(getString(R.string.notification_title))
+            .setContentText(text)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setOngoing(true) // This makes the notification persistent
+
+        // Show the notification
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(notificationId, builder.build())
+    }
+
+
+
+
+
 
 
 
