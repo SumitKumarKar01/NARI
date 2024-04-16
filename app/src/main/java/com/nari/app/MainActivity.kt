@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 
@@ -232,6 +233,7 @@ class MainActivity : AppCompatActivity() {
     private fun calendarButtonNavigation(){
         val calendarLog: RelativeLayout = findViewById(R.id.calendarLog)
         val calendarPreviousMenstruatuion: RelativeLayout = findViewById(R.id.calendarPreviousMenstruation)
+        val chatbotButton: RelativeLayout = findViewById(R.id.chatbotButton)
 //        val calendarSwitchMode: RelativeLayout = findViewById(R.id.calendarSwitchMode)
 //        val calendarHospitals: RelativeLayout = findViewById(R.id.calendarHospitals)
 
@@ -245,6 +247,18 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this,PreviousMenstruation::class.java)
             startActivity(intent)
             finish()
+        }
+
+        chatbotButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("tg://resolve?domain=joyeepcosbot")
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                // Telegram app is not installed, fallback to the browser version
+                intent.data = Uri.parse("https://t.me/joyeepcosbot")
+                startActivity(intent)
+            }
         }
 //        calendarSwitchMode.setOnClickListener {
 //            switchCalendarModes()

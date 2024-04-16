@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/AppTheme"
-    xmlns:tools="http://schemas.android.com/tools">
+    >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_marginVertical="5dp"
-                    android:text="Period/Ovulation Calendar"
+                    android:text="@string/period_ovulation_calendar"
                     android:textSize="24sp"
                     android:textColor="?attr/colorPrimary"
                     android:textStyle="bold"
@@ -133,7 +133,7 @@
                         android:paddingVertical="10dp"
                         android:paddingHorizontal="5dp"
                         android:layout_marginBottom="5dp"
-                        android:text="Log Symptomps"
+                        android:text="@string/log_symptomps"
                         android:textSize="16sp"
                         android:clickable="false"
                         />
@@ -171,8 +171,46 @@
                         android:paddingHorizontal="5dp"
                         android:layout_marginBottom="5dp"
                         android:clickable="false"
-                        android:text="Add Period Dates"
+                        android:text="@string/add_period_dates"
                         android:textSize="16sp"
+                        />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/chatbotButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="5dp"
+                    android:padding="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/button_background">
+
+                    <ImageButton
+                        android:id="@+id/chatbotButtonImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_bot_agent"
+                        android:layout_centerHorizontal="true"
+                        android:background="?attr/colorOnSurfaceInverse"
+                        android:contentDescription="@string/talk_to_chatbot"
+                        android:clickable="false"
+                        />
+
+                    <TextView
+                        android:id="@+id/chatbotButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/chatbotButtonImage"
+                        android:layout_centerHorizontal="true"
+                        android:paddingVertical="10dp"
+                        android:paddingHorizontal="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="@string/talk_to_chatbot"
+                        android:textSize="16sp"
+                        android:clickable="false"
                         />
                 </RelativeLayout>
             </GridLayout>

@@ -48,5 +48,9 @@
     <string name="channel_name">NARI Reminder</string>
     <string name="channel_description">Notifications about period and ovulation days</string>
     <string name="notification_title">NARI Reminder</string>
+    <string name="talk_to_chatbot">Talk to Chatbot</string>
+    <string name="period_ovulation_calendar">Period/Ovulation Calendar</string>
+    <string name="log_symptomps">Log Symptomps</string>
+    <string name="add_period_dates">Add Period Dates</string>
 
 </resources>
